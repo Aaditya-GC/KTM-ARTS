@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { enableUserView } from "@/lib/auth/view-mode";
@@ -34,8 +35,8 @@ function ActiveLink({ href, label }: { href: string; label: string }) {
       prefetch={false}
       className={`block text-label-sm uppercase tracking-widest py-2 px-3 rounded-sm transition-colors ${
         isActive
-          ? "text-primary bg-primary/10 border-l-2 border-primary"
-          : "text-on-surface-variant hover:text-primary hover:bg-surface-container-low"
+          ? "text-accent bg-accent/10 border-l-2 border-accent"
+          : "text-on-surface-variant hover:text-accent hover:bg-surface-container-low"
       }`}
     >
       {label}
@@ -44,12 +45,31 @@ function ActiveLink({ href, label }: { href: string; label: string }) {
 }
 
 export default function Sidebar({ user }: SidebarProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const allowedLinks = sidebarLinks.filter(
     (link) => link.role === user.role || user.role === "admin"
   );
 
   return (
-    <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col shrink-0">
+    <>
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="fixed top-4 left-4 z-50 md:hidden min-w-[44px] min-h-[44px] bg-surface border border-outline rounded-sm flex items-center justify-center shadow-sm"
+        aria-label={mobileOpen ? "Close sidebar" : "Open sidebar"}
+      >
+        <span className="material-symbols-outlined">{mobileOpen ? "close" : "menu"}</span>
+      </button>
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/30 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+    <aside
+      className={`w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col shrink-0 ${
+        mobileOpen ? "fixed inset-y-0 left-0 z-40" : "hidden md:flex"
+      }`}
+    >
       <div className="p-6 border-b border-outline-variant/20">
         <Link href="/" prefetch={false} className="font-headline-md text-primary tracking-widest uppercase block mb-1">
           KA
@@ -71,7 +91,7 @@ export default function Sidebar({ user }: SidebarProps) {
           <form action={enableUserView}>
             <button
               type="submit"
-              className="w-full text-left text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 py-2 px-3"
+              className="w-full text-left text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors flex items-center gap-2 py-2 px-3"
             >
               <span className="material-symbols-outlined text-sm">visibility</span>
               View as Client
@@ -81,7 +101,7 @@ export default function Sidebar({ user }: SidebarProps) {
         <Link
           href="/"
           prefetch={false}
-          className="block text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors py-2 px-3"
+          className="block text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors py-2 px-3"
         >
           Back to Site
         </Link>
@@ -96,5 +116,6 @@ export default function Sidebar({ user }: SidebarProps) {
         </form>
       </div>
     </aside>
+    </>
   );
 }

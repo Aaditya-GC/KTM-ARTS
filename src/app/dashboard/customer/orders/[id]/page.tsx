@@ -7,11 +7,37 @@ import Link from "next/link";
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const [order] = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
+  const [order] = await db
+    .select({
+      id: orders.id,
+      status: orders.status,
+      totalNpr: orders.totalNpr,
+      paymentMethod: orders.paymentMethod,
+      createdAt: orders.createdAt,
+    })
+    .from(orders)
+    .where(eq(orders.id, id))
+    .limit(1);
   if (!order) notFound();
 
   const items = await db
-    .select()
+    .select({
+      order_items: {
+        id: orderItems.id,
+        priceNpr: orderItems.priceNpr,
+      },
+      artworks: {
+        id: artworks.id,
+        title: artworks.title,
+        images: artworks.images,
+      },
+      artists: {
+        id: artists.id,
+      },
+      profiles: {
+        fullName: profiles.fullName,
+      },
+    })
     .from(orderItems)
     .innerJoin(artworks, eq(orderItems.artworkId, artworks.id))
     .innerJoin(artists, eq(artworks.artistId, artists.id))

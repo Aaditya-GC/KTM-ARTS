@@ -71,6 +71,7 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
@@ -82,7 +83,7 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
             <div className="flex gap-2 mt-4 overflow-x-auto">
               {artwork.images.map((img, i) => (
                 <div key={i} className="w-20 h-20 shrink-0 bg-surface-container-low rounded-sm overflow-hidden relative">
-                  <Image src={img} alt="" fill className="object-cover" sizes="80px" />
+                  <Image src={img} alt="" fill className="object-cover" sizes="80px" loading="lazy" />
                 </div>
               ))}
             </div>
@@ -100,22 +101,15 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
             <h1 className="text-headline-lg text-on-background">{artwork.title}</h1>
             <Link
               href={`/artists/${artist.slug}`}
-              className="text-body-lg text-on-surface-variant italic hover:text-primary transition-colors inline-block mt-2"
+              className="text-body-lg text-on-surface-variant italic hover:text-accent transition-colors inline-block mt-2"
             >
               {profile.fullName}
             </Link>
           </div>
 
-          <div>
-            <p className="text-headline-md text-primary">
-              NPR {artwork.priceNpr.toLocaleString()}
-            </p>
-            {artwork.priceUsd && (
-              <p className="text-body-md text-on-surface-variant">
-                ${artwork.priceUsd.toLocaleString()} USD
-              </p>
-            )}
-          </div>
+          <p className="text-2xl font-medium text-primary">
+            NPR {artwork.priceNpr.toLocaleString("en-US")}
+          </p>
 
           <AddToCartButton
             artwork={{

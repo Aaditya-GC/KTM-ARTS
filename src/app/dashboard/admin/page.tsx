@@ -14,7 +14,12 @@ export default async function AdminOverviewPage() {
   const [orderCount] = await db.select({ count: sql<number>`count(*)` }).from(orders);
 
   const recentOrders = await db
-    .select()
+    .select({
+      id: orders.id,
+      status: orders.status,
+      totalNpr: orders.totalNpr,
+      createdAt: orders.createdAt,
+    })
     .from(orders)
     .orderBy(orders.createdAt)
     .limit(5);

@@ -1,6 +1,5 @@
 import { getCurrentUser } from "@/lib/auth/roles";
-import { getViewMode } from "@/lib/auth/view-mode";
-import { disableUserView } from "@/lib/auth/view-mode";
+import { getViewMode, disableUserView } from "@/lib/auth/view-mode";
 import Link from "next/link";
 
 export async function ViewModeBanner() {

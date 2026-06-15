@@ -1,10 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { db } from "@/lib/db";
 import { artists, artworks, profiles, articles, testimonials } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { GoldButton } from "@/components/shared/gold-button";
 import { SectionHeader } from "@/components/shared/section-header";
-import { BadgeVerified } from "@/components/shared/badge-verified";
 import { ArtistCard } from "@/components/artist/artist-card";
 import { ArtCard } from "@/components/art/art-card";
 
@@ -37,46 +37,48 @@ export default async function HomePage() {
   return (
     <div>
       {/* Section 1 — Hero */}
-      <section className="min-h-screen flex items-center relative overflow-hidden">
-        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row items-center gap-16 w-full">
-          <div className="flex-1 space-y-6 z-10">
-            <div className="flex items-center gap-3">
-              <span className="w-8 h-px bg-primary" />
-              <span className="text-label-sm uppercase tracking-widest text-primary font-bold">The Sacred Archive</span>
-            </div>
-            <h1 className="text-display-xl text-on-background leading-none">
-              Himalayan Heritage,<br />
-              <span className="text-glow-gold text-primary">Preserved in Gold</span>
-            </h1>
-            <p className="text-body-lg text-on-surface-variant italic max-w-xl">
-              Authentic Thangka masterpieces from the Kathmandu Valley.
-              Centuries of tradition, crafted for the global collector.
-            </p>
-            <div className="flex gap-6 pt-4">
-              <Link href="/marketplace">
-                <GoldButton>Browse Collection</GoldButton>
-              </Link>
-              <Link
-                href="/artists"
-                className="border border-primary/40 text-primary px-10 py-4 rounded-full text-label-sm uppercase tracking-widest font-bold hover:bg-primary/10 transition-colors"
-              >
-                Our Heritage
-              </Link>
-            </div>
+      <section className="relative w-full min-h-screen overflow-hidden -mt-[132px]">
+        <Image
+          src="https://images.pexels.com/photos/2408167/pexels-photo-2408167.jpeg?auto=compress&cs=tinysrgb&w=1920&q=85"
+          alt=""
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+          priority
+        />
+        <div className="absolute inset-0 z-10" style={{ background: "linear-gradient(to bottom, rgba(10,6,2,0.45) 0%, rgba(10,6,2,0.65) 100%)" }} />
+        <div className="relative z-20 flex flex-col items-center justify-end min-h-screen px-6 pb-12 md:pb-16 text-center">
+          <div className="max-w-xl mx-auto">
+          <p className="text-xs tracking-[0.25em] uppercase text-tertiary mb-5">
+            KATHMANDU VALLEY · EST. 2024
+          </p>
+          <h1 className="text-3xl md:text-4xl font-normal text-on-primary leading-[1.1] tracking-[-0.5px]" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>
+            Sacred Art,<br />
+            Thoughtfully Collected.
+          </h1>
+          <p className="text-sm text-tertiary mt-4 max-w-[360px]">
+            Original Thangka paintings by verified Himalayan artists.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-8">
+            <Link
+              href="/marketplace"
+              className="bg-background text-on-background text-[11px] tracking-[2px] uppercase px-7 py-3.5 min-h-[44px] flex items-center justify-center hover:bg-on-background hover:text-background transition-colors duration-200"
+            >
+              Browse Collection
+            </Link>
+            <Link
+              href="/knowledge-hub"
+              className="bg-transparent border border-background text-on-primary text-[11px] tracking-[2px] uppercase px-7 py-3.5 min-h-[44px] flex items-center justify-center hover:bg-background/10 transition-colors duration-200"
+            >
+              Our Heritage
+            </Link>
           </div>
-          <div className="flex-1 relative">
-            <div className="aspect-[4/5] bg-surface-container-low rounded-sm overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-lowest flex items-center justify-center">
-                <span className="material-symbols-outlined text-[200px] text-primary/10">temple_hindu</span>
-              </div>
-            </div>
-            <div className="absolute -top-4 -right-4 bg-background/90 backdrop-blur-md px-4 py-2 rounded-sm animate-float">
-              <BadgeVerified />
-            </div>
-            <div className="absolute -bottom-4 -left-4 bg-background/90 backdrop-blur-md px-4 py-2 rounded-sm animate-float" style={{ animationDelay: "3s" }}>
-              <span className="text-label-sm uppercase tracking-widest text-primary font-bold">Hand Painted</span>
-            </div>
           </div>
+        </div>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-tertiary animate-bounce">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
         </div>
       </section>
 

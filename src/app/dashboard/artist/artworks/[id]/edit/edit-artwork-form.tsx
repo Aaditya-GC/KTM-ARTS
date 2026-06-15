@@ -300,7 +300,7 @@ export function EditArtworkForm({ artwork, categories: initialCategories, steps:
                 className={`px-3 py-1.5 text-label-sm uppercase tracking-widest rounded-full border transition-colors ${
                   materials.includes(mat)
                     ? "bg-primary text-on-primary border-primary"
-                    : "border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary"
+                    : "border-outline-variant text-on-surface-variant hover:border-primary hover:text-accent"
                 }`}
               >
                 {mat}
@@ -330,7 +330,7 @@ export function EditArtworkForm({ artwork, categories: initialCategories, steps:
               {materials.map((mat) => (
                 <span key={mat} className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary text-label-sm rounded-full">
                   {mat}
-                  <button type="button" onClick={() => removeMaterial(mat)} className="text-primary hover:text-primary-fixed">&times;</button>
+                  <button type="button" onClick={() => removeMaterial(mat)} className="text-primary hover:text-accent">&times;</button>
                 </span>
               ))}
             </div>

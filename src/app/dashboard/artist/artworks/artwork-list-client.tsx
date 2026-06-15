@@ -128,7 +128,7 @@ export function ArtworkListClient({ artworks }: Props) {
             <div className="flex items-center gap-2 shrink-0">
               <Link
                 href={`/dashboard/artist/artworks/${artwork.id}/edit`}
-                className="px-4 py-2 border border-outline-variant text-label-sm uppercase tracking-widest text-on-surface-variant hover:border-primary hover:text-primary rounded-sm transition-colors"
+                className="px-4 py-2 border border-outline-variant text-label-sm uppercase tracking-widest text-on-surface-variant hover:border-primary hover:text-accent rounded-sm transition-colors"
               >
                 Edit
               </Link>

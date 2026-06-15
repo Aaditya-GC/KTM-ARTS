@@ -23,6 +23,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+              loading="lazy"
             />
           ) : (
             <span className="material-symbols-outlined text-6xl text-on-surface-variant/30">person</span>
@@ -35,7 +36,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
         </div>
       </div>
       <div className="mt-4">
-        <h3 className="text-headline-md text-on-surface group-hover:text-primary transition-colors">
+        <h3 className="text-headline-md text-on-surface group-hover:text-accent transition-colors">
           {artist.fullName}
         </h3>
         <p className="text-label-sm uppercase text-on-surface-variant tracking-widest mt-1">

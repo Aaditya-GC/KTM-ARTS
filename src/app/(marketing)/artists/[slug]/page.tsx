@@ -67,7 +67,7 @@ export default async function ArtistProfilePage({ params }: ArtistProfilePagePro
         )}
 
         {artist.isVerified && (
-          <div className="mt-4">
+          <div className="mt-4 min-h-[28px] flex items-center">
             <BadgeVerified />
           </div>
         )}
