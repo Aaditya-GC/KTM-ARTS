@@ -35,7 +35,7 @@ export function ActiveFilters() {
           className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container text-label-sm uppercase tracking-widest text-on-surface-variant border border-outline-variant rounded-sm"
         >
           {filter.label}
-          <button onClick={() => removeFilter(filter.key, filter.value)} className="hover:text-primary">
+          <button onClick={() => removeFilter(filter.key, filter.value)} className="hover:text-accent">
             <span className="material-symbols-outlined text-[14px]">close</span>
           </button>
         </span>

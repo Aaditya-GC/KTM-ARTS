@@ -14,7 +14,7 @@ export default function MarketplaceError({
       <p className="text-body-md text-on-surface-variant mb-6">Please try again.</p>
       <button
         onClick={reset}
-        className="border border-primary text-primary px-8 py-3 rounded-full text-label-sm uppercase tracking-widest font-bold hover:bg-primary/10 transition-colors"
+        className="border border-secondary text-secondary px-8 py-3 rounded-sm text-label-sm uppercase tracking-widest font-bold hover:bg-surface-dim transition-colors"
       >
         Retry
       </button>

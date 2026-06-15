@@ -14,7 +14,7 @@ import {
 
 export const userRole = pgEnum("user_role", ["client", "artist", "admin"]);
 export const artworkStatus = pgEnum("artwork_status", ["available", "sold", "reserved", "draft"]);
-export const orderStatus = pgEnum("order_status", ["pending", "confirmed", "shipped", "delivered", "cancelled"]);
+export const orderStatus = pgEnum("order_status", ["pending", "paid", "shipped", "delivered", "cancelled"]);
 
 export const profiles = pgTable("profiles", {
   id: uuid("id").primaryKey(),
@@ -94,10 +94,12 @@ export const creationSteps = pgTable("creation_steps", {
 
 export const orders = pgTable("orders", {
   id: uuid("id").primaryKey().defaultRandom(),
-  customerId: uuid("customer_id").references(() => profiles.id).notNull(),
+  customerId: uuid("customer_id").references(() => profiles.id),
   status: orderStatus("status").default("pending").notNull(),
   totalNpr: integer("total_npr").notNull(),
   totalUsd: integer("total_usd"),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  currency: text("currency").default("npr"),
   paymentMethod: text("payment_method"),
   paymentId: text("payment_id"),
   shippingName: text("shipping_name").notNull(),
@@ -105,6 +107,7 @@ export const orders = pgTable("orders", {
   shippingPhone: text("shipping_phone"),
   notes: text("notes"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
 export const orderItems = pgTable("order_items", {
@@ -112,6 +115,7 @@ export const orderItems = pgTable("order_items", {
   orderId: uuid("order_id").references(() => orders.id, { onDelete: "cascade" }).notNull(),
   artworkId: uuid("artwork_id").references(() => artworks.id).notNull(),
   priceNpr: integer("price_npr").notNull(),
+  priceAtPurchase: integer("price_at_purchase"),
   quantity: integer("quantity").default(1),
 });
 

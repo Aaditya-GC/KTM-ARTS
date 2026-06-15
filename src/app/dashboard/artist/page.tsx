@@ -35,7 +35,7 @@ export default async function ArtistDashboardPage() {
     .innerJoin(artworks, eq(orderItems.artworkId, artworks.id))
     .where(and(
       eq(artworks.artistId, user.id),
-      eq(orders.status, "confirmed")
+      eq(orders.status, "paid")
     ));
 
   const totalRevenue = Number(revenueResult?.total ?? 0);
@@ -90,7 +90,7 @@ export default async function ArtistDashboardPage() {
               </button>
             </Link>
             <Link href={`/artists/${artist.slug}`}>
-              <button className="px-6 py-3 border border-outline-variant text-on-surface-variant text-label-sm uppercase tracking-widest rounded-full hover:border-primary hover:text-primary transition-colors">
+              <button className="px-6 py-3 border border-outline-variant text-on-surface-variant text-label-sm uppercase tracking-widest rounded-full hover:border-primary hover:text-accent transition-colors">
                 View Public Profile
               </button>
             </Link>

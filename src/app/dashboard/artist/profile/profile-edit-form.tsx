@@ -161,7 +161,7 @@ export function ProfileEditForm({ artist }: Props) {
                 className={`px-4 py-2 text-label-sm uppercase tracking-widest rounded-full border transition-colors ${
                   specializations.includes(spec)
                     ? "bg-primary text-on-primary border-primary"
-                    : "border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary"
+                    : "border-outline-variant text-on-surface-variant hover:border-primary hover:text-accent"
                 }`}
               >
                 {spec}

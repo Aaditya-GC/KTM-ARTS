@@ -9,36 +9,43 @@ import { createClient } from "@/lib/supabase/server";
 import { initiateKhaltiPayment } from "@/lib/payments/khalti";
 
 export async function createOrder(formData: FormData) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not authenticated");
 
-  const itemsJson = formData.get("items") as string;
-  const items: Array<{ artworkId: string; title: string; priceNpr: number; priceUsd?: number }> = JSON.parse(itemsJson);
+    const itemsJson = formData.get("items") as string;
+    const items: Array<{ artworkId: string; title: string; priceNpr: number; priceUsd?: number }> = JSON.parse(itemsJson);
 
-  const totalNpr = items.reduce((sum, i) => sum + i.priceNpr, 0);
+    const totalNpr = items.reduce((sum, i) => sum + i.priceNpr, 0);
 
-  const [order] = await db.insert(orders).values({
-    customerId: user.id,
-    totalNpr,
-    shippingName: formData.get("shippingName") as string,
-    shippingAddress: JSON.parse(formData.get("shippingAddress") as string),
-    shippingPhone: formData.get("shippingPhone") as string,
-    notes: formData.get("notes") as string,
-    paymentMethod: formData.get("paymentMethod") as string,
-  }).returning();
+    const [order] = await db.insert(orders).values({
+      customerId: user.id,
+      totalNpr,
+      shippingName: formData.get("shippingName") as string,
+      shippingAddress: JSON.parse(formData.get("shippingAddress") as string),
+      shippingPhone: formData.get("shippingPhone") as string,
+      notes: formData.get("notes") as string,
+      paymentMethod: formData.get("paymentMethod") as string,
+    }).returning({
+      id: orders.id,
+      totalNpr: orders.totalNpr,
+    });
 
-  await db.insert(orderItems).values(
-    items.map((item) => ({
-      orderId: order.id,
-      artworkId: item.artworkId,
-      priceNpr: item.priceNpr,
-      quantity: 1,
-    }))
-  );
+    await db.insert(orderItems).values(
+      items.map((item) => ({
+        orderId: order.id,
+        artworkId: item.artworkId,
+        priceNpr: item.priceNpr,
+        quantity: 1,
+      }))
+    );
 
-  revalidatePath("/dashboard/customer/orders");
-  return order;
+    revalidatePath("/dashboard/customer/orders");
+    return order;
+  } catch {
+    throw new Error("Order creation failed. Please try again.");
+  }
 }
 
 export async function initiateOrderPayment(formData: FormData) {
@@ -86,7 +93,7 @@ export async function initiateOrderPayment(formData: FormData) {
 
 export async function confirmOrder(orderId: string) {
   await db.update(orders)
-    .set({ status: "confirmed" })
+    .set({ status: "paid" })
     .where(eq(orders.id, orderId));
 
   revalidatePath(`/dashboard/customer/orders/${orderId}`);

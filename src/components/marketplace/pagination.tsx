@@ -34,7 +34,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
       <button
         onClick={() => goToPage(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="p-2 text-on-surface-variant hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed"
+        className="p-2 text-on-surface-variant hover:text-accent disabled:opacity-30 disabled:cursor-not-allowed"
       >
         <span className="material-symbols-outlined">west</span>
       </button>
@@ -50,7 +50,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
               "w-10 h-10 rounded-sm text-label-sm font-bold transition-colors",
               page === currentPage
                 ? "bg-primary text-on-primary"
-                : "text-on-surface-variant hover:text-primary"
+                : "text-on-surface-variant hover:text-accent"
             )}
           >
             {page}
@@ -61,7 +61,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
       <button
         onClick={() => goToPage(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="p-2 text-on-surface-variant hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed"
+        className="p-2 text-on-surface-variant hover:text-accent disabled:opacity-30 disabled:cursor-not-allowed"
       >
         <span className="material-symbols-outlined">east</span>
       </button>

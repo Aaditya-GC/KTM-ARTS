@@ -7,8 +7,8 @@ interface CartItemProps {
 
 export function CartItemRow({ item, onRemove }: CartItemProps) {
   return (
-    <div className="flex items-center gap-4 py-4 border-b border-outline-variant/10">
-      <div className="w-20 h-20 shrink-0 bg-surface-container rounded-sm overflow-hidden">
+    <div className="flex items-start gap-4 py-4 border-b border-outline-variant/10 last:border-b-0">
+      <div className="w-20 h-20 shrink-0 bg-surface-container rounded-lg overflow-hidden">
         {item.image ? (
           <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
         ) : (
@@ -18,11 +18,15 @@ export function CartItemRow({ item, onRemove }: CartItemProps) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-body-md text-on-surface truncate">{item.title}</p>
+        <p className="text-body-md font-medium text-on-surface line-clamp-1">{item.title}</p>
         <p className="text-label-sm text-on-surface-variant mt-0.5">{item.artistName}</p>
-        <p className="text-body-md text-primary mt-1">NPR {item.priceNpr.toLocaleString()}</p>
+        <p className="text-body-md font-semibold text-primary mt-1.5">NPR {item.priceNpr.toLocaleString()}</p>
       </div>
-      <button onClick={() => onRemove(item.artworkId)} className="text-on-surface-variant hover:text-error transition-colors shrink-0">
+      <button
+        onClick={() => onRemove(item.artworkId)}
+        className="text-on-surface-variant hover:text-error transition-colors shrink-0 mt-0.5"
+        aria-label="Remove item"
+      >
         <span className="material-symbols-outlined">close</span>
       </button>
     </div>

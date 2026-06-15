@@ -23,7 +23,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
   const page = Number(params.page) || 1;
   const offset = (page - 1) * PAGE_SIZE;
 
-  let query = db
+  const query = db
     .select()
     .from(artworks)
     .innerJoin(artists, eq(artworks.artistId, artists.id))
@@ -131,7 +131,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
             <div className="text-center py-20">
               <span className="material-symbols-outlined text-6xl text-on-surface-variant/20">search_off</span>
               <p className="text-body-lg text-on-surface-variant mt-4">No artworks match your search criteria</p>
-              <Link href="/marketplace" className="text-primary hover:underline mt-2 inline-block text-label-sm uppercase tracking-widest">
+              <Link href="/marketplace" className="text-accent hover:underline mt-2 inline-block text-label-sm uppercase tracking-widest">
                 Clear all filters
               </Link>
             </div>

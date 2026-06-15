@@ -16,7 +16,7 @@ interface AddToCartButtonProps {
 }
 
 export function AddToCartButton({ artwork }: AddToCartButtonProps) {
-  const { addItem, isInCart, removeItem, itemCount } = useCart();
+  const { addItem, isInCart, removeItem } = useCart();
   const inCart = isInCart(artwork.id);
 
   function handleToggle() {

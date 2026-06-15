@@ -51,7 +51,7 @@ export default async function KnowledgeHubPage() {
                 {article.category && (
                   <span className="text-label-sm uppercase tracking-widest text-primary font-bold">{article.category}</span>
                 )}
-                <h3 className="text-headline-md text-on-surface group-hover:text-primary transition-colors">
+                <h3 className="text-headline-md text-on-surface group-hover:text-accent transition-colors">
                   {article.title}
                 </h3>
                 <p className="text-body-md text-on-surface-variant line-clamp-2">

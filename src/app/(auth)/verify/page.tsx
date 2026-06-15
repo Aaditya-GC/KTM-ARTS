@@ -12,7 +12,7 @@ export default function VerifyPage() {
       </p>
       <Link
         href="/login"
-        className="text-primary text-label-sm uppercase tracking-widest hover:underline inline-block mt-4"
+        className="text-accent text-label-sm uppercase tracking-widest hover:underline inline-block mt-4"
       >
         Go to Sign In
       </Link>

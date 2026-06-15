@@ -46,7 +46,7 @@ export default function RegisterPage() {
         </p>
         <Link
           href="/login"
-          className="text-primary text-label-sm uppercase tracking-widest hover:underline inline-block mt-4"
+          className="text-accent text-label-sm uppercase tracking-widest hover:underline inline-block mt-4"
         >
           Go to Sign In
         </Link>
@@ -118,7 +118,7 @@ export default function RegisterPage() {
 
       <p className="text-center text-body-md text-on-surface-variant">
         Already have an account?{" "}
-        <Link href="/login" className="text-primary hover:underline">
+        <Link href="/login" className="text-accent hover:underline">
           Sign In
         </Link>
       </p>

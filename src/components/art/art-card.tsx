@@ -19,10 +19,10 @@ interface ArtCardProps {
 }
 
 const statusColors = {
-  available: "text-primary",
-  reserved: "text-secondary",
-  sold: "text-on-surface-variant",
-  draft: "text-on-surface-variant",
+  available: "bg-accent text-accent-foreground",
+  reserved: "bg-secondary text-on-secondary",
+  sold: "bg-surface-variant text-on-surface-variant",
+  draft: "bg-surface-variant text-on-surface-variant",
 };
 
 const statusLabels = {
@@ -34,8 +34,8 @@ const statusLabels = {
 
 export function ArtCard({ artwork }: ArtCardProps) {
   return (
-    <Link href={`/marketplace/${artwork.slug}`} className="group block art-card-reveal">
-      <div className="bg-surface-container-low p-4">
+    <Link href={`/marketplace/${artwork.slug}`} className="group flex flex-col h-full art-card-reveal hover:-translate-y-0.5 transition-transform duration-300">
+      <div className="bg-surface-container-low p-2">
         <div className="relative overflow-hidden aspect-[4/5]">
           {artwork.images[0] ? (
             <Image
@@ -44,27 +44,26 @@ export function ArtCard({ artwork }: ArtCardProps) {
               fill
               className="object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full bg-surface-container-higher flex items-center justify-center">
-              <span className="material-symbols-outlined text-5xl text-on-surface-variant/30">image</span>
+              <span className="material-symbols-outlined text-3xl text-on-surface-variant/30">image</span>
             </div>
           )}
-          <span className={`absolute top-3 left-3 bg-background/90 px-3 py-1 text-label-sm uppercase tracking-widest ${statusColors[artwork.status]}`}>
+          <span className={`absolute top-2 left-2 px-2 py-0.5 text-label-sm uppercase tracking-widest ${statusColors[artwork.status]}`}>
             {statusLabels[artwork.status]}
           </span>
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
       </div>
-      <div className="flex justify-between items-start mt-4 px-1">
-        <div className="space-y-1">
-          <h3 className="text-headline-md text-on-surface group-hover:text-primary transition-colors">
-            {artwork.title}
-          </h3>
-          <p className="text-body-md text-on-surface-variant italic">{artwork.artist.name}</p>
-          {artwork.isVerified && <BadgeVerified />}
-        </div>
-        <p className="text-headline-md text-primary whitespace-nowrap">
+      <div className="flex flex-col flex-1 pt-3 px-1 pb-1">
+        <h3 className="text-body-lg text-on-surface group-hover:text-accent transition-colors line-clamp-2 min-h-[3rem] leading-snug">
+          {artwork.title}
+        </h3>
+        <p className="text-label-sm text-on-surface-variant italic mt-1 line-clamp-1">{artwork.artist.name}</p>
+        {artwork.isVerified && <div className="mt-2 min-h-[24px] flex items-center"><BadgeVerified /></div>}
+        <p className="text-body-md font-bold text-primary mt-auto pt-3">
           NPR {artwork.priceNpr.toLocaleString()}
         </p>
       </div>

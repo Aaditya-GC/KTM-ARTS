@@ -84,7 +84,7 @@ export function FilterSidebar({ className }: FilterSidebarProps) {
               <button
                 key={size.value}
                 onClick={() => updateFilter("size", size.value)}
-                className="px-3 py-2 border border-outline-variant text-label-sm uppercase tracking-widest text-on-surface-variant hover:border-primary hover:text-primary transition-colors rounded-sm"
+                className="px-3 py-2 border border-outline-variant text-label-sm uppercase tracking-widest text-on-surface-variant hover:border-primary hover:text-accent transition-colors rounded-sm"
               >
                 {size.label}
               </button>

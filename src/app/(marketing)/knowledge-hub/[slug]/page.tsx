@@ -42,7 +42,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <div className="max-w-3xl mx-auto">
         <Link
           href="/knowledge-hub"
-          className="inline-flex items-center gap-2 text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors mb-8"
         >
           <span className="material-symbols-outlined text-sm">trending_flat</span>
           Back to Articles

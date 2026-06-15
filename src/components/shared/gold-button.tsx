@@ -5,7 +5,7 @@ export function GoldButton({ className, children, ...props }: React.ComponentPro
   return (
     <Button
       className={cn(
-        "gold-leaf-button px-10 py-4 h-auto rounded-full font-label-sm text-label-sm uppercase text-on-primary font-bold tracking-widest",
+        "gold-leaf-button px-10 py-4 h-auto rounded-sm font-label-sm text-label-sm uppercase tracking-widest font-bold",
         className
       )}
       {...props}

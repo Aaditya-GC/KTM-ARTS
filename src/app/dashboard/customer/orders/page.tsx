@@ -10,7 +10,12 @@ export default async function OrderHistoryPage() {
   if (!user) redirect("/login");
 
   const orderList = await db
-    .select()
+    .select({
+      id: orders.id,
+      status: orders.status,
+      totalNpr: orders.totalNpr,
+      createdAt: orders.createdAt,
+    })
     .from(orders)
     .where(eq(orders.customerId, user.id))
     .orderBy(orders.createdAt);
@@ -31,7 +36,7 @@ export default async function OrderHistoryPage() {
         <div className="text-center py-16 bg-surface-container-low rounded-sm">
           <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">receipt_long</span>
           <p className="text-body-md text-on-surface-variant">No orders yet</p>
-          <Link href="/marketplace" className="text-primary text-label-sm uppercase tracking-widest hover:underline mt-4 inline-block">
+          <Link href="/marketplace" className="text-accent text-label-sm uppercase tracking-widest hover:underline mt-4 inline-block">
             Start Shopping
           </Link>
         </div>

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { artworks, artworkCategories, creationSteps, certificates, profiles } from "@/lib/db/schema";
 import { artworkSchema, creationStepSchema, type ArtworkInput, type CreationStepInput } from "@/lib/validators/artwork";
 import { generateSlug } from "@/lib/utils/slug";
-import { eq, and, like } from "drizzle-orm";
+import { eq, like } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
