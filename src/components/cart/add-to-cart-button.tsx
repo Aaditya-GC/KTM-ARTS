@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useCart } from "@/hooks/use-cart";
 import { GoldButton } from "@/components/shared/gold-button";
 import { OutlineButton } from "@/components/shared/outline-button";
@@ -22,6 +23,7 @@ export function AddToCartButton({ artwork }: AddToCartButtonProps) {
   function handleToggle() {
     if (inCart) {
       removeItem(artwork.id);
+      toast.success("Removed from cart");
     } else {
       addItem({
         artworkId: artwork.id,
@@ -32,6 +34,7 @@ export function AddToCartButton({ artwork }: AddToCartButtonProps) {
         artistName: artwork.artistName,
         addedAt: Date.now(),
       });
+      toast.success("Added to cart");
     }
   }
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/db";
@@ -7,8 +8,19 @@ import { GoldButton } from "@/components/shared/gold-button";
 import { SectionHeader } from "@/components/shared/section-header";
 import { ArtistCard } from "@/components/artist/artist-card";
 import { ArtCard } from "@/components/art/art-card";
+import { getWishlistIds } from "@/lib/wishlist-actions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
+
+export const metadata: Metadata = {
+  title: "Kathmandu Arts | Himalayan Heritage Archive",
+  description: "Discover authentic Himalayan Thangka masterpieces. Bridging centuries of tradition with the global collector.",
+  openGraph: {
+    title: "Kathmandu Arts | Himalayan Heritage Archive",
+    description: "Discover authentic Himalayan Thangka masterpieces. Bridging centuries of tradition with the global collector.",
+    images: [{ url: "/images/og-default.jpg" }],
+  },
+};
 
 export default async function HomePage() {
   const featuredArtists = await db
@@ -25,6 +37,8 @@ export default async function HomePage() {
     .innerJoin(profiles, eq(artists.id, profiles.id))
     .where(and(eq(artworks.status, "available"), eq(artworks.isVerified, true)))
     .limit(3);
+
+  const wishlistIds = new Set(await getWishlistIds());
 
   const articleList = await db
     .select()
@@ -172,6 +186,7 @@ export default async function HomePage() {
               <ArtCard
                 key={artwork.slug}
                 artwork={{
+                  id: artwork.id,
                   slug: artwork.slug,
                   title: artwork.title,
                   images: artwork.images ?? [],
@@ -181,6 +196,7 @@ export default async function HomePage() {
                   isVerified: artwork.isVerified ?? false,
                   artist: { name: profile.fullName, slug: artist.slug },
                 }}
+                inWishlist={wishlistIds.has(artwork.id)}
               />
             ))}
           </div>

@@ -1,11 +1,20 @@
+import type { Metadata } from "next";
 import { SectionHeader } from "@/components/shared/section-header";
-import { GoldButton } from "@/components/shared/gold-button";
-import Link from "next/link";
 import { db } from "@/lib/db";
 import { artists } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { CommissionForm } from "@/components/commission/commission-form";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: "Commissions — Kathmandu Arts",
+  description: "Commission a custom Thangka masterpiece. Work directly with master artists to create a sacred artwork tailored to your vision.",
+  openGraph: {
+    title: "Commissions — Kathmandu Arts",
+    description: "Commission a custom Thangka masterpiece with our master artists.",
+  },
+};
 
 export default async function CommissionsPage() {
   const commissionArtists = await db
@@ -91,16 +100,14 @@ export default async function CommissionsPage() {
         )}
       </div>
 
-      <div className="border border-primary/20 bg-surface-container-high p-8 md:p-12 rounded-sm text-center mt-section-gap max-w-3xl mx-auto">
-        <h2 className="text-headline-md text-on-background mb-4">Ready to Begin?</h2>
-        <p className="text-body-lg text-on-surface-variant mb-8 max-w-xl mx-auto">
-          Submit your commission inquiry and our curation team will respond within 48 hours
+      <section className="border border-primary/20 bg-surface-container-high p-8 md:p-12 rounded-sm mt-section-gap max-w-3xl mx-auto">
+        <h2 className="text-headline-md text-on-background mb-4 text-center">Ready to Begin?</h2>
+        <p className="text-body-lg text-on-surface-variant mb-8 max-w-xl mx-auto text-center">
+          Share your vision below and our curation team will respond within 48 hours
           with artist recommendations and a preliminary timeline.
         </p>
-        <Link href="mailto:commissions@kathmanduarts.com">
-          <GoldButton>Start Your Commission</GoldButton>
-        </Link>
-      </div>
+        <CommissionForm />
+      </section>
     </div>
   );
 }

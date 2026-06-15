@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -8,7 +6,20 @@ import { artworks, artists, profiles, certificates, creationSteps } from "@/lib/
 import { eq } from "drizzle-orm";
 import { BadgeVerified } from "@/components/shared/badge-verified";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { AddToWishlistButton } from "@/components/cart/add-to-wishlist-button";
+import { getWishlistIds } from "@/lib/wishlist-actions";
 import Link from "next/link";
+
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const slugs = await db
+    .select({ slug: artworks.slug })
+    .from(artworks)
+    .where(eq(artworks.status, "available"));
+
+  return slugs.map(({ slug }) => ({ slug }));
+}
 
 interface ArtworkDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -59,8 +70,34 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
     .where(eq(creationSteps.artworkId, artwork.id))
     .orderBy(creationSteps.stepNumber);
 
+  const wishlistIds = new Set(await getWishlistIds());
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: artwork.title,
+    description: artwork.description,
+    image: artwork.images,
+    offers: {
+      "@type": "Offer",
+      price: artwork.priceUsd ?? Math.round(artwork.priceNpr / 134),
+      priceCurrency: artwork.priceUsd ? "USD" : "NPR",
+      availability: artwork.status === "available"
+        ? "https://schema.org/InStock"
+        : "https://schema.org/SoldOut",
+    },
+    creator: {
+      "@type": "Person",
+      name: profile.fullName,
+    },
+  };
+
   return (
     <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="grid lg:grid-cols-2 gap-16">
         <div>
           <div className="aspect-[4/5] bg-surface-container-low overflow-hidden rounded-sm relative">
@@ -111,16 +148,21 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
             NPR {artwork.priceNpr.toLocaleString("en-US")}
           </p>
 
-          <AddToCartButton
-            artwork={{
-              id: artwork.id,
-              slug: artwork.slug,
-              title: artwork.title,
-              images: artwork.images,
-              priceNpr: artwork.priceNpr,
-              artistName: profile.fullName,
-            }}
-          />
+          <div className="flex items-center gap-3">
+            <div className="flex-1">
+              <AddToCartButton
+                artwork={{
+                  id: artwork.id,
+                  slug: artwork.slug,
+                  title: artwork.title,
+                  images: artwork.images,
+                  priceNpr: artwork.priceNpr,
+                  artistName: profile.fullName,
+                }}
+              />
+            </div>
+            <AddToWishlistButton artworkId={artwork.id} initialInWishlist={wishlistIds.has(artwork.id)} />
+          </div>
 
           <div className="border-t border-outline-variant/20 pt-8 space-y-4">
             <p className="text-body-lg text-on-surface-variant leading-relaxed">

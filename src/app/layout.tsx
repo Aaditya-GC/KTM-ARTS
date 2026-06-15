@@ -16,9 +16,25 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: "Kathmandu Arts | Himalayan Heritage Archive",
   description:
     "Discover authentic Himalayan Thangka masterpieces. Bridging centuries of tradition with the global collector.",
+  openGraph: {
+    title: "Kathmandu Arts | Himalayan Heritage Archive",
+    description:
+      "Discover authentic Himalayan Thangka masterpieces. Bridging centuries of tradition with the global collector.",
+    siteName: "Kathmandu Arts",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

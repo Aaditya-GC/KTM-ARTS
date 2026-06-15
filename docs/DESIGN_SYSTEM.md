@@ -11,61 +11,63 @@
 
 ## 2. Color System
 
-### Semantic Tokens (Light-on-Dark — `.dark` mode is default)
+### Semantic Tokens (Warm / Light Theme — default)
 
 | Token | Hex | Role |
 |---|---|---|
-| `background` | `#14140f` | Page background (deep warm black) |
-| `surface` | `#14140f` | Base surface |
-| `surface-dim` | `#14140f` | Dimmed surface |
-| `surface-container-lowest` | `#0f0e0a` | Section alt background |
-| `surface-container-low` | `#1c1c16` | Card backgrounds |
-| `surface-container` | `#20201a` | Elevated containers |
-| `surface-container-high` | `#2b2a24` | Higher elevation |
-| `surface-container-highest` | `#36352f` | Highest elevation |
-| `surface-bright` | `#3a3933` | Bright surface accent |
-| `surface-variant` | `#36352f` | Variant surface |
-| `on-background` | `#e6e2d9` | Primary text (warm off-white) |
-| `on-surface` | `#e6e2d9` | Text on surface |
-| `on-surface-variant` | `#d0c5af` | Secondary text (warm beige) |
-| `primary` | `#f2ca50` | Primary gold |
-| `primary-container` | `#d4af37` | Darker gold (borders, badges) |
-| `primary-fixed` | `#ffe088` | Light gold (fixed) |
-| `primary-fixed-dim` | `#e9c349` | Dim gold |
-| `on-primary` | `#3c2f00` | Text on gold (deep brown) |
-| `on-primary-container` | `#554300` | Text on gold container |
-| `on-primary-fixed` | `#241a00` | Text on light gold |
-| `on-primary-fixed-variant` | `#574500` | Variant text on gold |
-| `secondary` | `#d1c4ba` | Secondary (warm gray-beige) |
-| `secondary-container` | `#504840` | Secondary container |
-| `secondary-fixed` | `#ede0d6` | Light secondary |
-| `secondary-fixed-dim` | `#d1c4ba` | Dim secondary |
-| `on-secondary` | `#362f28` | Text on secondary |
-| `on-secondary-container` | `#c2b6ad` | Text on secondary container |
-| `on-secondary-fixed` | `#211a14` | Text on secondary fixed |
-| `on-secondary-fixed-variant` | `#4d453e` | Variant |
-| `tertiary` | `#decbbf` | Tertiary (pale rose-beige) |
-| `tertiary-container` | `#c1b0a4` | Tertiary container |
-| `tertiary-fixed` | `#f2dfd2` | Light tertiary |
-| `tertiary-fixed-dim` | `#d5c3b7` | Dim tertiary |
-| `on-tertiary` | `#392e26` | Text on tertiary |
-| `on-tertiary-container` | `#4f433a` | Text on tertiary container |
-| `on-tertiary-fixed` | `#231a12` | Text on tertiary fixed |
-| `on-tertiary-fixed-variant` | `#51443b` | Variant |
-| `error` | `#ffb4ab` | Error state |
-| `error-container` | `#93000a` | Error container |
-| `on-error` | `#690005` | Text on error |
-| `on-error-container` | `#ffdad6` | Text on error container |
-| `outline` | `#99907c` | Borders/outlines |
-| `outline-variant` | `#4d4635` | Subtle borders |
-| `inverse-surface` | `#e6e2d9` | Inverse surface |
-| `inverse-primary` | `#735c00` | Inverse primary |
-| `inverse-on-surface` | `#31302b` | Inverse text |
-| `surface-tint` | `#e9c349` | Surface tint (gold) |
+| `background` | `#F5F0E8` | Page background (warm cream) |
+| `surface` | `#F5F0E8` | Base surface |
+| `surface-dim` | `#EDE5D8` | Dimmed surface |
+| `surface-container-lowest` | `#EDE5D8` | Section alt background |
+| `surface-container-low` | `#EDE5D8` | Card backgrounds |
+| `surface-container` | `#EDE5D8` | Elevated containers |
+| `surface-container-high` | `#EDE5D8` | Higher elevation |
+| `surface-container-highest` | `#E0D5C5` | Highest elevation |
+| `surface-bright` | `#F5F0E8` | Bright surface accent |
+| `surface-variant` | `#EDE5D8` | Variant surface |
+| `on-background` | `#1C1008` | Primary text (espresso brown) |
+| `on-surface` | `#1C1008` | Text on surface |
+| `on-surface-variant` | `#8C6A4E` | Secondary text (warm brown) |
+| `primary` | `#7A5C00` | Deep brass / gold |
+| `primary-container` | `#A08230` | Gold container |
+| `primary-fixed` | `#C4A44D` | Light gold |
+| `primary-fixed-dim` | `#8B6B1A` | Dim gold |
+| `on-primary` | `#F5F0E8` | Text on gold (cream) |
+| `on-primary-container` | `#F5F0E8` | Text on gold container |
+| `on-primary-fixed` | `#1C1008` | Text on light gold |
+| `on-primary-fixed-variant` | `#F5F0E8` | Variant text on gold |
+| `accent` | `#5C3317` | Deep rust (buttons, links) |
+| `accent-foreground` | `#F5F0E8` | Text on accent |
+| `secondary` | `#1C1008` | Near-black for buttons |
+| `secondary-container` | `#EDE5D8` | Secondary container |
+| `secondary-fixed` | `#F5F0E8` | Light secondary |
+| `secondary-fixed-dim` | `#DDD0BC` | Dim secondary |
+| `on-secondary` | `#F5F0E8` | Text on secondary |
+| `on-secondary-container` | `#8C6A4E` | Text on secondary container |
+| `on-secondary-fixed` | `#1C1008` | Text on secondary fixed |
+| `on-secondary-fixed-variant` | `#8C6A4E` | Variant |
+| `tertiary` | `#c4a882` | Warm beige |
+| `tertiary-container` | `#EDE5D8` | Tertiary container |
+| `tertiary-fixed` | `#F5F0E8` | Light tertiary |
+| `tertiary-fixed-dim` | `#DDD0BC` | Dim tertiary |
+| `on-tertiary` | `#1C1008` | Text on tertiary |
+| `on-tertiary-container` | `#8C6A4E` | Text on tertiary container |
+| `on-tertiary-fixed` | `#1C1008` | Text on tertiary fixed |
+| `on-tertiary-fixed-variant` | `#8C6A4E` | Variant |
+| `error` | `#a0522d` | Sienna / terracotta |
+| `error-container` | `#f5e6d8` | Error container (cream) |
+| `on-error` | `#F5F0E8` | Text on error |
+| `on-error-container` | `#5C3317` | Text on error container |
+| `outline` | `#DDD0BC` | Borders/outlines |
+| `outline-variant` | `#E8DFD0` | Subtle borders |
+| `inverse-surface` | `#1C1008` | Inverse surface (dark) |
+| `inverse-primary` | `#7A5C00` | Inverse primary |
+| `inverse-on-surface` | `#F5F0E8` | Inverse text |
+| `surface-tint` | `#7A5C00` | Surface tint (gold) |
 
 ### Side Drawer (Mobile Menu) Override
-- Background: `#F5F1E8` (warm cream)
-- Text: `#2A2018` (deep brown)
+- Background: `#F5F0E8` (warm cream)
+- Text: `#1C1008` (espresso brown)
 
 ---
 

@@ -1,10 +1,20 @@
 export const revalidate = 300;
 
+import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { artists, profiles } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { ArtistGrid } from "@/components/artist/artist-grid";
 import { SectionHeader } from "@/components/shared/section-header";
+
+export const metadata: Metadata = {
+  title: "Artists — Kathmandu Arts",
+  description: "Meet the master Thangka artists of the Kathmandu Valley. Each artist carries generations of lineage and tradition.",
+  openGraph: {
+    title: "Artists — Kathmandu Arts",
+    description: "Meet the master Thangka artists of the Kathmandu Valley.",
+  },
+};
 
 export default async function ArtistsPage() {
   const artistList = await db

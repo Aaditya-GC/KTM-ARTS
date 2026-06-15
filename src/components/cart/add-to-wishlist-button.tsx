@@ -1,0 +1,54 @@
+"use client";
+
+import { toast } from "sonner";
+import { addToWishlist, removeFromWishlist, isInWishlist } from "@/lib/wishlist-actions";
+import { useState, useEffect } from "react";
+
+export function AddToWishlistButton({
+  artworkId,
+  size = "md",
+  initialInWishlist,
+}: {
+  artworkId: string;
+  size?: "sm" | "md";
+  initialInWishlist?: boolean;
+}) {
+  const [inWishlist, setInWishlist] = useState(initialInWishlist ?? false);
+  const [loading, setLoading] = useState(initialInWishlist === undefined);
+
+  useEffect(() => {
+    if (initialInWishlist !== undefined) return;
+    isInWishlist(artworkId).then(setInWishlist).finally(() => setLoading(false));
+  }, [artworkId, initialInWishlist]);
+
+  async function handleClick() {
+    if (inWishlist) {
+      await removeFromWishlist(artworkId);
+      setInWishlist(false);
+      toast.success("Removed from wishlist");
+    } else {
+      await addToWishlist(artworkId);
+      setInWishlist(true);
+      toast.success("Added to wishlist");
+    }
+  }
+
+  if (loading) {
+    return <div className={`${size === "sm" ? "w-7 h-7" : "w-10 h-10"}`} />;
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      className="p-2 hover:text-primary transition-colors"
+      aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+    >
+      <span
+        className="material-symbols-outlined"
+        style={{ fontVariationSettings: inWishlist ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300" }}
+      >
+        favorite
+      </span>
+    </button>
+  );
+}

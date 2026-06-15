@@ -178,5 +178,22 @@ export type WishlistItem = typeof wishlistItems.$inferSelect;
 export type NewWishlistItem = typeof wishlistItems.$inferInsert;
 export type Article = typeof articles.$inferSelect;
 export type NewArticle = typeof articles.$inferInsert;
+export const commissionRequests = pgTable("commission_requests", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  deity: text("deity"),
+  style: text("style"),
+  sizeDescription: text("size_description"),
+  budgetNpr: integer("budget_npr"),
+  description: text("description").notNull(),
+  status: text("status").default("new").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type CommissionRequest = typeof commissionRequests.$inferSelect;
+export type NewCommissionRequest = typeof commissionRequests.$inferInsert;
+
 export type Testimonial = typeof testimonials.$inferSelect;
 export type NewTestimonial = typeof testimonials.$inferInsert;

@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { articles } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;

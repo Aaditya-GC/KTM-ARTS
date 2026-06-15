@@ -1,15 +1,18 @@
 export const revalidate = 60;
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { artworks, artists, profiles } from "@/lib/db/schema";
 import { eq, and, sql, gte, lte, inArray } from "drizzle-orm";
 import { Suspense } from "react";
+import { getWishlistIds } from "@/lib/wishlist-actions";
 import { ArtGrid } from "@/components/art/art-grid";
 import { SearchBar } from "@/components/marketplace/search-bar";
 import { SortSelect } from "@/components/marketplace/sort-select";
 import { ActiveFilters } from "@/components/marketplace/active-filters";
 import { FilterSidebar } from "@/components/marketplace/filter-sidebar";
+import { MobileFilterSheet } from "@/components/marketplace/mobile-filter-sheet";
 import { Pagination } from "@/components/marketplace/pagination";
 
 interface MarketplacePageProps {
@@ -17,6 +20,17 @@ interface MarketplacePageProps {
 }
 
 const PAGE_SIZE = 12;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Marketplace — Kathmandu Arts",
+    description: "Browse our curated collection of authentic Thangka artworks. Each piece carries centuries of spiritual tradition and artisan mastery.",
+    openGraph: {
+      title: "Marketplace — Kathmandu Arts",
+      description: "Browse our curated collection of authentic Thangka artworks.",
+    },
+  };
+}
 
 export default async function MarketplacePage({ searchParams }: MarketplacePageProps) {
   const params = await searchParams;
@@ -73,8 +87,11 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
   const totalCount = Number(countResult[0]?.count ?? 0);
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
+  const wishlistIds = new Set(await getWishlistIds());
+
   // Need to explicitly type the join result
   const mapped: Array<{
+    id: string;
     slug: string;
     title: string;
     images: string[];
@@ -84,6 +101,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
     isVerified: boolean;
     artist: { name: string; slug: string };
   }> = result.map(({ artworks, profiles, artists }) => ({
+    id: artworks.id,
     slug: artworks.slug,
     title: artworks.title,
     images: artworks.images ?? [],
@@ -136,7 +154,7 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
               </Link>
             </div>
           ) : (
-            <ArtGrid artworks={mapped} />
+            <ArtGrid artworks={mapped} wishlistIds={wishlistIds} />
           )}
 
           <Suspense fallback={null}>
@@ -144,6 +162,10 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
           </Suspense>
         </div>
       </div>
+
+      <Suspense fallback={null}>
+        <MobileFilterSheet />
+      </Suspense>
     </div>
   );
 }

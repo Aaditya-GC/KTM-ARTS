@@ -1,10 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { articles } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { SectionHeader } from "@/components/shared/section-header";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "Knowledge Hub — Kathmandu Arts",
+  description: "Explore the Sacred Archive — articles on Thangka art, iconography, collecting, and preservation of Himalayan heritage.",
+  openGraph: {
+    title: "Knowledge Hub — Kathmandu Arts",
+    description: "Explore the Sacred Archive of Himalayan art knowledge.",
+  },
+};
 
 export default async function KnowledgeHubPage() {
   const allArticles = await db

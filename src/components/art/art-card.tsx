@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BadgeVerified } from "@/components/shared/badge-verified";
+import { AddToWishlistButton } from "@/components/cart/add-to-wishlist-button";
 
 interface ArtCardProps {
   artwork: {
+    id?: string;
     slug: string;
     title: string;
     images: string[];
@@ -16,6 +18,7 @@ interface ArtCardProps {
       slug: string;
     };
   };
+  inWishlist?: boolean;
 }
 
 const statusColors = {
@@ -32,7 +35,7 @@ const statusLabels = {
   draft: "Draft",
 };
 
-export function ArtCard({ artwork }: ArtCardProps) {
+export function ArtCard({ artwork, inWishlist }: ArtCardProps) {
   return (
     <Link href={`/marketplace/${artwork.slug}`} className="group flex flex-col h-full art-card-reveal hover:-translate-y-0.5 transition-transform duration-300">
       <div className="bg-surface-container-low p-2">
@@ -62,7 +65,10 @@ export function ArtCard({ artwork }: ArtCardProps) {
           {artwork.title}
         </h3>
         <p className="text-label-sm text-on-surface-variant italic mt-1 line-clamp-1">{artwork.artist.name}</p>
-        {artwork.isVerified && <div className="mt-2 min-h-[24px] flex items-center"><BadgeVerified /></div>}
+        <div className="flex items-center justify-between mt-2">
+          {artwork.isVerified && <BadgeVerified />}
+          {artwork.id && <AddToWishlistButton artworkId={artwork.id} size="sm" initialInWishlist={inWishlist} />}
+        </div>
         <p className="text-body-md font-bold text-primary mt-auto pt-3">
           NPR {artwork.priceNpr.toLocaleString()}
         </p>
