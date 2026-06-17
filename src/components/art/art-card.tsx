@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BadgeVerified } from "@/components/shared/badge-verified";
 import { AddToWishlistButton } from "@/components/cart/add-to-wishlist-button";
+import { PriceDisplay } from "@/components/shared/price-display";
 
 interface ArtCardProps {
   artwork: {
@@ -70,7 +71,7 @@ export function ArtCard({ artwork, inWishlist }: ArtCardProps) {
           {artwork.id && <AddToWishlistButton artworkId={artwork.id} size="sm" initialInWishlist={inWishlist} />}
         </div>
         <p className="text-body-md font-bold text-primary mt-auto pt-3">
-          NPR {artwork.priceNpr.toLocaleString()}
+          <PriceDisplay priceNpr={artwork.priceNpr} />
         </p>
       </div>
     </Link>

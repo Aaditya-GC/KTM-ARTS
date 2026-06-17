@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, type FormEvent } from "react"
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { PriceDisplay } from "@/components/shared/price-display";
 import { searchArtworks, type SearchResult } from "@/lib/search-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -235,7 +236,7 @@ export function SearchModal({ open, onClose }: { open: boolean; onClose: () => v
                         )}
                       </div>
                       <p className="text-label-sm text-primary whitespace-nowrap tabular-nums">
-                        NPR {item.priceNpr.toLocaleString()}
+                        <PriceDisplay priceNpr={item.priceNpr} />
                       </p>
                     </Link>
                   ))}

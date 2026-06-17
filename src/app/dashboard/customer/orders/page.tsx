@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { getCurrentUser } from "@/lib/auth/roles";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { PriceDisplay } from "@/components/shared/price-display";
 
 export default async function OrderHistoryPage() {
   const user = await getCurrentUser();
@@ -53,7 +54,7 @@ export default async function OrderHistoryPage() {
                 <p className="text-label-sm text-on-surface-variant">{new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="text-right">
-                <p className="text-body-md text-primary">NPR {order.totalNpr.toLocaleString()}</p>
+                <p className="text-body-md text-primary"><PriceDisplay priceNpr={order.totalNpr} /></p>
                 <p className={`text-label-sm uppercase tracking-widest ${statusColors[order.status] ?? ""}`}>
                   {order.status}
                 </p>

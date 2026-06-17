@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { removeFromWishlist } from "@/lib/wishlist-actions";
+import { PriceDisplay } from "@/components/shared/price-display";
 import Link from "next/link";
 
 interface WishlistItem {
@@ -40,7 +41,7 @@ export function WishlistClient({ items }: { items: WishlistItem[] }) {
             </Link>
             <p className="text-label-sm text-on-surface-variant italic mt-1">{item.artistName}</p>
             <div className="flex items-center justify-between mt-3">
-              <p className="text-body-md font-bold text-primary">NPR {item.priceNpr.toLocaleString()}</p>
+              <p className="text-body-md font-bold text-primary"><PriceDisplay priceNpr={item.priceNpr} /></p>
               <button
                 onClick={async () => {
                   await removeFromWishlist(item.artworkId);

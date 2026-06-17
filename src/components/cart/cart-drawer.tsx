@@ -2,6 +2,9 @@
 
 import { useCart } from "@/hooks/use-cart";
 import { CartItemRow } from "@/components/cart/cart-item";
+import { PriceDisplay } from "@/components/shared/price-display";
+import { useCurrencyStore } from "@/stores/currencyStore";
+import { formatPrice } from "@/lib/currency";
 import Link from "next/link";
 import {
   Sheet,
@@ -17,6 +20,7 @@ interface CartDrawerProps {
 
 export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const { items, removeItem, totalNpr, itemCount } = useCart();
+  const currency = useCurrencyStore((s) => s.currency);
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -54,9 +58,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               <div className="border-t border-outline-variant/20 px-6 pt-4 pb-6 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-semibold text-on-surface-variant">Total</span>
-                  <span className="text-xl font-semibold text-on-surface">NPR {totalNpr().toLocaleString()}</span>
+                  <span className="text-xl font-semibold text-on-surface">{formatPrice(totalNpr(), currency.code)}</span>
                 </div>
-                <Link href="/dashboard/customer/checkout" onClick={onClose}>
+                <Link href="/checkout" onClick={onClose}>
                   <button className="w-full bg-secondary text-on-secondary font-medium py-2.5 rounded-sm text-sm hover:bg-accent transition-colors">
                     Proceed to Checkout
                   </button>

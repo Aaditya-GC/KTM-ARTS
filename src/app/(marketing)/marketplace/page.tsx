@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { artworks, artists, profiles } from "@/lib/db/schema";
-import { eq, and, sql, gte, lte, inArray } from "drizzle-orm";
+import { eq, and, sql, gte, lte, inArray, ilike } from "drizzle-orm";
 import { Suspense } from "react";
 import { getWishlistIds } from "@/lib/wishlist-actions";
 import { ArtGrid } from "@/components/art/art-grid";
@@ -14,6 +14,13 @@ import { ActiveFilters } from "@/components/marketplace/active-filters";
 import { FilterSidebar } from "@/components/marketplace/filter-sidebar";
 import { MobileFilterSheet } from "@/components/marketplace/mobile-filter-sheet";
 import { Pagination } from "@/components/marketplace/pagination";
+const categoryTitles: Record<string, string> = {
+  thangka: "Thangka Paintings",
+  mandala: "Mandalas",
+  malas: "Malas & Prayer Beads",
+  "singing-bowls": "Singing Bowls",
+  statues: "Statues & Crafts",
+};
 
 interface MarketplacePageProps {
   searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -21,15 +28,14 @@ interface MarketplacePageProps {
 
 const PAGE_SIZE = 12;
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Marketplace — Kathmandu Arts",
-    description: "Browse our curated collection of authentic Thangka artworks. Each piece carries centuries of spiritual tradition and artisan mastery.",
-    openGraph: {
-      title: "Marketplace — Kathmandu Arts",
-      description: "Browse our curated collection of authentic Thangka artworks.",
-    },
-  };
+export async function generateMetadata({ searchParams }: MarketplacePageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const categoryTitle = params.category ? categoryTitles[params.category] : null;
+  const title = categoryTitle ? `${categoryTitle} — Kathmandu Arts` : "Marketplace — Kathmandu Arts";
+  const description = categoryTitle
+    ? `Browse our collection of ${categoryTitle.toLowerCase()}. Each piece carries centuries of spiritual tradition and artisan mastery.`
+    : "Browse our curated collection of authentic Thangka artworks. Each piece carries centuries of spiritual tradition and artisan mastery.";
+  return { title, description, openGraph: { title, description } };
 }
 
 export default async function MarketplacePage({ searchParams }: MarketplacePageProps) {
@@ -64,6 +70,10 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
 
   if (params.price_max) {
     conditions.push(lte(artworks.priceNpr, Number(params.price_max)));
+  }
+
+  if (params.category) {
+    conditions.push(ilike(artworks.style, `%${params.category}%`));
   }
 
   const sortKey = params.sort || "newest";
@@ -118,10 +128,22 @@ export default async function MarketplacePage({ searchParams }: MarketplacePageP
   return (
     <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
       <div className="mb-12">
-        <h1 className="text-headline-lg text-on-background">Archive</h1>
+        <h1 className="text-headline-lg text-on-background">
+          {params.category ? categoryTitles[params.category] ?? "Archive" : "Archive"}
+        </h1>
         <p className="text-body-lg text-on-surface-variant italic mt-2">
           Each piece carries centuries of spiritual tradition and artisan mastery
         </p>
+        {params.category && (
+          <div className="flex items-center gap-2 mt-4">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 border border-outline text-label-sm uppercase tracking-widest text-on-surface-variant rounded-sm">
+              {categoryTitles[params.category] ?? params.category}
+              <Link href="/marketplace" className="text-on-surface-variant hover:text-accent transition-colors">
+                ×
+              </Link>
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-8">

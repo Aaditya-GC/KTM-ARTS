@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { cartItems, artworks, artists, profiles } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { createClient } from "@/lib/supabase/server";
 
 export async function syncCartToDb(items: Array<{ artworkId: string }>) {
@@ -29,8 +29,18 @@ export async function syncCartToDb(items: Array<{ artworkId: string }>) {
     }
   }
 
-  for (const item of items) {
-    if (!existingIds.has(item.artworkId)) {
+  const newItems = items.filter(i => !existingIds.has(i.artworkId));
+  if (newItems.length === 0) return;
+
+  const validArtworks = await db
+    .select({ id: artworks.id })
+    .from(artworks)
+    .where(inArray(artworks.id, newItems.map(i => i.artworkId)));
+
+  const validIds = new Set(validArtworks.map(a => a.id));
+
+  for (const item of newItems) {
+    if (validIds.has(item.artworkId)) {
       await db
         .insert(cartItems)
         .values({ userId: user.id, artworkId: item.artworkId })
@@ -43,6 +53,31 @@ export async function getCartFromDb() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return [];
+
+  const userItems = await db
+    .select({ artworkId: cartItems.artworkId })
+    .from(cartItems)
+    .where(eq(cartItems.userId, user.id));
+
+  if (userItems.length > 0) {
+    const validArtworks = await db
+      .select({ id: artworks.id })
+      .from(artworks)
+      .where(inArray(artworks.id, userItems.map(i => i.artworkId)));
+
+    const validIds = new Set(validArtworks.map(a => a.id));
+
+    for (const item of userItems) {
+      if (!validIds.has(item.artworkId)) {
+        await db
+          .delete(cartItems)
+          .where(and(
+            eq(cartItems.userId, user.id),
+            eq(cartItems.artworkId, item.artworkId),
+          ));
+      }
+    }
+  }
 
   return db
     .select({

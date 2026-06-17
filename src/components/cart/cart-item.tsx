@@ -1,4 +1,5 @@
 import type { CartItem } from "@/hooks/use-cart";
+import { PriceDisplay } from "@/components/shared/price-display";
 
 interface CartItemProps {
   item: CartItem;
@@ -20,7 +21,7 @@ export function CartItemRow({ item, onRemove }: CartItemProps) {
       <div className="flex-1 min-w-0">
         <p className="text-body-md font-medium text-on-surface line-clamp-1">{item.title}</p>
         <p className="text-label-sm text-on-surface-variant mt-0.5">{item.artistName}</p>
-        <p className="text-body-md font-semibold text-primary mt-1.5">NPR {item.priceNpr.toLocaleString()}</p>
+        <p className="text-body-md font-semibold text-primary mt-1.5"><PriceDisplay priceNpr={item.priceNpr} /></p>
       </div>
       <button
         onClick={() => onRemove(item.artworkId)}

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="bg-surface-dim border-t border-outline py-16 px-margin-mobile md:px-margin-desktop">
@@ -9,14 +11,14 @@ export function Footer() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">
-          {["Archive", "Master Artists", "Private Commissions", "Cultural Preservation", "Privacy Policy"].map((item) => (
-            <span
-              key={item}
-              className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors cursor-pointer"
-            >
-              {item}
-            </span>
-          ))}
+          <span className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors cursor-pointer">Archive</span>
+          <span className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors cursor-pointer">Master Artists</span>
+          <span className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors cursor-pointer">Private Commissions</span>
+          <span className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors cursor-pointer">Cultural Preservation</span>
+          <Link href="/privacy-policy" className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors">Privacy Policy</Link>
+          <Link href="/shipping-policy" className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors">Shipping Policy</Link>
+          <Link href="/returns-refunds" className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors">Returns & Refunds</Link>
+          <Link href="/terms-of-service" className="text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent transition-colors">Terms of Service</Link>
         </div>
 
         <div className="flex justify-center space-x-8">

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { orders, orderItems, artworks, artists, profiles } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import Link from "next/link";
+import { PriceDisplay } from "@/components/shared/price-display";
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -76,7 +77,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         </div>
         <div className="flex justify-between text-body-md">
           <span className="text-on-surface-variant">Total</span>
-          <span className="text-headline-md text-primary">NPR {order.totalNpr.toLocaleString()}</span>
+           <span className="text-headline-md text-primary"><PriceDisplay priceNpr={order.totalNpr} /></span>
         </div>
         <div className="flex justify-between text-body-md">
           <span className="text-on-surface-variant">Payment</span>
@@ -101,7 +102,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               <p className="text-body-md text-on-surface">{artworks.title}</p>
               <p className="text-label-sm text-on-surface-variant">{profiles.fullName}</p>
             </div>
-            <p className="text-body-md text-primary">NPR {order_items.priceNpr.toLocaleString()}</p>
+            <p className="text-body-md text-primary"><PriceDisplay priceNpr={order_items.priceNpr} /></p>
           </div>
         ))}
       </div>

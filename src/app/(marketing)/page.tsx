@@ -51,7 +51,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Section 1 — Hero */}
-      <section className="relative w-full min-h-screen overflow-hidden -mt-[132px]">
+      <section className="relative w-full min-h-screen overflow-hidden -mt-[100px]">
         <Image
           src="https://images.pexels.com/photos/2408167/pexels-photo-2408167.jpeg?auto=compress&cs=tinysrgb&w=1920&q=85"
           alt=""
@@ -231,10 +231,13 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-        <div className="aspect-[21/9] bg-surface-container-low mt-16 rounded-sm overflow-hidden">
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-lowest">
-            <span className="text-label-sm uppercase tracking-widest text-on-surface-variant/30">Editorial Image</span>
-          </div>
+        <div className="aspect-[21/9] bg-surface-container-low mt-16 rounded-sm overflow-hidden relative">
+          <Image
+            src="/images/side-img.jpg"
+            alt="Thangka creation in progress"
+            fill
+            className="object-cover object-center"
+          />
         </div>
       </section>
 

@@ -3,22 +3,31 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { artworks, artists, profiles, certificates, creationSteps } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or, and, ne, sql } from "drizzle-orm";
 import { BadgeVerified } from "@/components/shared/badge-verified";
+import { PriceDisplay } from "@/components/shared/price-display";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { AddToWishlistButton } from "@/components/cart/add-to-wishlist-button";
 import { getWishlistIds } from "@/lib/wishlist-actions";
+import { getReviewsForArtwork, getAverageRating, getHasUserReviewed } from "@/lib/review-actions";
+import { ReviewsSection } from "@/components/reviews/reviews-section";
+import { ArtCard } from "@/components/art/art-card";
+import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
 export const revalidate = 300;
 
 export async function generateStaticParams() {
-  const slugs = await db
-    .select({ slug: artworks.slug })
-    .from(artworks)
-    .where(eq(artworks.status, "available"));
+  try {
+    const slugs = await db
+      .select({ slug: artworks.slug })
+      .from(artworks)
+      .where(eq(artworks.status, "available"));
 
-  return slugs.map(({ slug }) => ({ slug }));
+    return slugs.map(({ slug }) => ({ slug }));
+  } catch {
+    return [];
+  }
 }
 
 interface ArtworkDetailPageProps {
@@ -71,6 +80,57 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
     .orderBy(creationSteps.stepNumber);
 
   const wishlistIds = new Set(await getWishlistIds());
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const currentUserId = user?.id ?? null;
+
+  let initialReviews: Awaited<ReturnType<typeof getReviewsForArtwork>> = [];
+  let initialAverage = 0;
+  let initialCount = 0;
+  let hasReviewed = false;
+
+  try {
+    [initialReviews, { average: initialAverage, count: initialCount }, hasReviewed] = await Promise.all([
+      getReviewsForArtwork(artwork.id),
+      getAverageRating(artwork.id),
+      currentUserId ? getHasUserReviewed(artwork.id) : false,
+    ]);
+  } catch {
+    // reviews table may not exist yet; default to empty state
+  }
+
+  const relatedArtworks = await db
+    .select()
+    .from(artworks)
+    .innerJoin(artists, eq(artworks.artistId, artists.id))
+    .innerJoin(profiles, eq(artists.id, profiles.id))
+    .where(
+      and(
+        ne(artworks.id, artwork.id),
+        eq(artworks.status, "available"),
+        artwork.deity || artwork.style
+          ? or(
+              ...(artwork.deity ? [eq(artworks.deity, artwork.deity)] : []),
+              ...(artwork.style ? [eq(artworks.style, artwork.style)] : []),
+            )
+          : undefined,
+      ),
+    )
+    .limit(4)
+    .orderBy(sql`RANDOM()`);
+
+  const relatedMapped = relatedArtworks.map(({ artworks: a, artists: art, profiles: p }) => ({
+    id: a.id,
+    slug: a.slug,
+    title: a.title,
+    images: a.images ?? [],
+    priceNpr: a.priceNpr,
+    priceUsd: a.priceUsd,
+    status: a.status,
+    isVerified: a.isVerified ?? false,
+    artist: { name: p.fullName, slug: art.slug },
+  }));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -145,7 +205,7 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
           </div>
 
           <p className="text-2xl font-medium text-primary">
-            NPR {artwork.priceNpr.toLocaleString("en-US")}
+            <PriceDisplay priceNpr={artwork.priceNpr} />
           </p>
 
           <div className="flex items-center gap-3">
@@ -232,6 +292,35 @@ export default async function ArtworkDetailPage({ params }: ArtworkDetailPagePro
           )}
         </div>
       </div>
+
+      <div className="mt-16">
+        <ReviewsSection
+          artworkId={artwork.id}
+          initialReviews={initialReviews}
+          initialAverage={initialAverage}
+          initialCount={initialCount}
+          isAuthenticated={!!user}
+          hasReviewed={hasReviewed}
+          currentUserId={currentUserId}
+        />
+      </div>
+
+      {relatedMapped.length > 0 && (
+        <div className="mt-16">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="flex-1 h-px bg-outline-variant/50" />
+            <h2 className="text-label-sm uppercase tracking-widest text-on-surface-variant shrink-0">
+              You May Also Like
+            </h2>
+            <div className="flex-1 h-px bg-outline-variant/50" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {relatedMapped.map((a) => (
+              <ArtCard key={a.id} artwork={a} inWishlist={wishlistIds.has(a.id)} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

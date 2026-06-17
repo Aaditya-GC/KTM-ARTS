@@ -2,6 +2,18 @@ import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/db/schema";
 
+function mapProfile(raw: Record<string, unknown>): Profile {
+  return {
+    id: raw.id as string,
+    role: raw.role as Profile["role"],
+    fullName: (raw.full_name as string) ?? "",
+    avatarUrl: raw.avatar_url as string | null,
+    phone: raw.phone as string | null,
+    country: raw.country as string | null,
+    createdAt: raw.created_at ? new Date(raw.created_at as string) : new Date(),
+  };
+}
+
 export const getCurrentUser = cache(async (): Promise<Profile | null> => {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -13,7 +25,7 @@ export const getCurrentUser = cache(async (): Promise<Profile | null> => {
     .eq("id", user.id)
     .single();
 
-  return profile ?? null;
+  return profile ? mapProfile(profile) : null;
 });
 
 export async function requireRole(role: "client" | "artist" | "admin") {

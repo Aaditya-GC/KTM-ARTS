@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getOrderById } from "@/lib/checkout-actions";
 import { GoldButton } from "@/components/shared/gold-button";
+import { PriceDisplay } from "@/components/shared/price-display";
 
 interface Props {
   params: Promise<{ orderId: string }>;
@@ -36,7 +37,7 @@ export default async function ConfirmationPage({ params }: Props) {
           {order.items?.map((item: { id: string; priceNpr: number }) => (
             <div key={item.id} className="flex justify-between text-body-md">
               <span className="text-on-surface">Artwork</span>
-              <span className="text-on-surface-variant">NPR {item.priceNpr.toLocaleString()}</span>
+              <span className="text-on-surface-variant"><PriceDisplay priceNpr={item.priceNpr} /></span>
             </div>
           ))}
         </div>
@@ -56,7 +57,7 @@ export default async function ConfirmationPage({ params }: Props) {
 
         <div className="border-t border-outline-variant/20 pt-4 flex justify-between items-center">
           <span className="text-body-md text-on-surface font-semibold">Total Paid</span>
-          <span className="text-headline-md text-primary">NPR {order.totalNpr.toLocaleString()}</span>
+          <span className="text-headline-md text-primary"><PriceDisplay priceNpr={order.totalNpr} /></span>
         </div>
 
         <p className="text-label-sm text-on-surface-variant/60 pt-2">

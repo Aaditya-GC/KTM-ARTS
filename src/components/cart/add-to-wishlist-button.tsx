@@ -21,7 +21,8 @@ export function AddToWishlistButton({
     isInWishlist(artworkId).then(setInWishlist).finally(() => setLoading(false));
   }, [artworkId, initialInWishlist]);
 
-  async function handleClick() {
+  async function handleClick(e: React.MouseEvent) {
+    e.stopPropagation();
     if (inWishlist) {
       await removeFromWishlist(artworkId);
       setInWishlist(false);
@@ -33,15 +34,15 @@ export function AddToWishlistButton({
     }
   }
 
-  if (loading) {
-    return <div className={`${size === "sm" ? "w-7 h-7" : "w-10 h-10"}`} />;
-  }
-
   return (
-    <button
+    <span
       onClick={handleClick}
-      className="p-2 hover:text-primary transition-colors"
+      onPointerDown={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      className="inline-flex cursor-pointer p-1 hover:text-primary transition-colors"
       aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+      role="button"
+      tabIndex={0}
     >
       <span
         className="material-symbols-outlined"
@@ -49,6 +50,6 @@ export function AddToWishlistButton({
       >
         favorite
       </span>
-    </button>
+    </span>
   );
 }

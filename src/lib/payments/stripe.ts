@@ -4,6 +4,7 @@ import Stripe from "stripe";
 
 export async function createStripeCheckoutSession(orderData: {
   orderId: string;
+  publicCheckout?: boolean;
   items: Array<{ title: string; priceUsd: number; quantity: number }>;
 }) {
   try {
@@ -20,8 +21,8 @@ export async function createStripeCheckoutSession(orderData: {
         quantity: item.quantity,
       })),
       metadata: { orderId: orderData.orderId },
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/customer/orders/${orderData.orderId}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/customer/checkout`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}${orderData.publicCheckout ? `/checkout/confirmation/${orderData.orderId}` : `/dashboard/customer/orders/${orderData.orderId}`}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}${orderData.publicCheckout ? "/checkout" : "/dashboard/customer/checkout"}`,
     });
 
     return session;

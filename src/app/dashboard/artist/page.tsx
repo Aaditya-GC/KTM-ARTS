@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { artworks, orderItems, orders, artists } from "@/lib/db/schema";
 import { getCurrentUser } from "@/lib/auth/roles";
 import { eq, and, desc, sql } from "drizzle-orm";
+import { PriceDisplay } from "@/components/shared/price-display";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { GoldButton } from "@/components/shared/gold-button";
@@ -75,7 +76,7 @@ export default async function ArtistDashboardPage() {
             </div>
             <div className="bg-surface-container-low border border-outline-variant p-6 rounded-sm">
               <p className="text-label-sm uppercase tracking-widest text-on-surface-variant">Revenue</p>
-              <p className="text-headline-lg text-primary mt-1">NPR {totalRevenue.toLocaleString("en-IN")}</p>
+              <p className="text-headline-lg text-primary mt-1"><PriceDisplay priceNpr={totalRevenue} /></p>
             </div>
           </div>
 
@@ -124,7 +125,7 @@ export default async function ArtistDashboardPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-body-md text-on-surface truncate">{artwork.title}</p>
                     <p className="text-label-sm text-on-surface-variant">
-                      {artwork.status === "available" ? "Published" : "Draft"} &middot; NPR {artwork.priceNpr.toLocaleString("en-IN")}
+                       {artwork.status === "available" ? "Published" : "Draft"} &middot; <PriceDisplay priceNpr={artwork.priceNpr} />
                     </p>
                   </div>
                   <span className="material-symbols-outlined text-on-surface-variant">chevron_right</span>

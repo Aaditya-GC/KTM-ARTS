@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { GoldButton } from "@/components/shared/gold-button";
-import { OutlineButton } from "@/components/shared/outline-button";
 import type { Artwork } from "@/lib/db/schema";
+import { PriceDisplay } from "@/components/shared/price-display";
 
 type Tab = "all" | "available" | "draft";
 
@@ -41,10 +41,6 @@ export function ArtworkListClient({ artworks }: Props) {
 
   function formatDate(date: Date | string) {
     return new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  }
-
-  function formatNpr(price: number) {
-    return `NPR ${price.toLocaleString("en-IN")}`;
   }
 
   if (artworks.length === 0) {
@@ -119,7 +115,7 @@ export function ArtworkListClient({ artworks }: Props) {
                 }`}>
                   {artwork.status === "available" ? "Published" : "Draft"}
                 </span>
-                <span className="text-label-sm text-on-surface-variant">{formatNpr(artwork.priceNpr)}</span>
+                <span className="text-label-sm text-on-surface-variant"><PriceDisplay priceNpr={artwork.priceNpr} /></span>
                 <span className="text-label-sm text-on-surface-variant/60">{formatDate(artwork.createdAt)}</span>
               </div>
             </div>

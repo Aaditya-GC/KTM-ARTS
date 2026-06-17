@@ -3,6 +3,7 @@ import { orderItems, orders, artworks, profiles } from "@/lib/db/schema";
 import { getCurrentUser } from "@/lib/auth/roles";
 import { eq, and, desc } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { PriceDisplay } from "@/components/shared/price-display";
 
 const statusColors: Record<string, string> = {
   pending: "bg-surface-variant text-on-surface-variant",
@@ -59,7 +60,7 @@ export default async function ArtistOrdersPage() {
                     Customer: {order.customerName}
                   </p>
                   <p className="text-label-sm text-on-surface-variant">
-                    NPR {order.priceNpr.toLocaleString("en-IN")}
+                    <PriceDisplay priceNpr={order.priceNpr} />
                   </p>
                 </div>
                 <span className={`px-2 py-0.5 text-label-sm uppercase tracking-widest shrink-0 rounded-sm ${statusColors[order.orderStatus] || ""}`}>

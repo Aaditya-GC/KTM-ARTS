@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { profiles, artists, artworks, orders } from "@/lib/db/schema";
+import { PriceDisplay } from "@/components/shared/price-display";
 import { eq, sql } from "drizzle-orm";
 import Link from "next/link";
 
@@ -65,7 +66,7 @@ export default async function AdminOverviewPage() {
               <div key={order.id} className="flex justify-between items-center">
                 <p className="text-body-md text-on-surface">#{order.id.slice(0, 8)}</p>
                 <span className={`text-label-sm uppercase ${statusColors[order.status] ?? ""}`}>{order.status}</span>
-                <p className="text-body-md text-primary">NPR {order.totalNpr.toLocaleString()}</p>
+                <p className="text-body-md text-primary"><PriceDisplay priceNpr={order.totalNpr} /></p>
               </div>
             ))}
           </div>

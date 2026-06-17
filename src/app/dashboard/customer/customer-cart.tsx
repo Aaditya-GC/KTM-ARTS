@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCart } from "@/hooks/use-cart";
+import { PriceDisplay } from "@/components/shared/price-display";
 import Link from "next/link";
 
 export function CustomerCartSection() {
@@ -45,11 +46,11 @@ export function CustomerCartSection() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-body-md text-on-surface line-clamp-1">{item.title}</p>
-                <p className="text-body-md text-primary mt-0.5">NPR {item.priceNpr.toLocaleString()}</p>
+                <p className="text-body-md text-primary mt-0.5"><PriceDisplay priceNpr={item.priceNpr} /></p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <Link
-                  href="/dashboard/customer/checkout"
+                  href="/checkout"
                   className="text-label-sm uppercase tracking-widest text-primary hover:underline"
                 >
                   Checkout

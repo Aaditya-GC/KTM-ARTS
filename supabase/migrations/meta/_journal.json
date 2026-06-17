@@ -15,6 +15,13 @@
       "when": 1781537287513,
       "tag": "0001_ancient_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781600431873,
+      "tag": "0002_simple_blob",
+      "breakpoints": true
     }
   ]
 }

@@ -84,7 +84,7 @@ export default async function CommissionsPage() {
                     <span className="text-label-sm text-on-surface-variant/30">Artist Image</span>
                   </div>
                 </div>
-                <h3 className="text-headline-md text-on-surface">{artist.slug.replace(/-/g, " ")}</h3>
+                <h3 className="text-headline-md text-on-surface capitalize">{artist.slug.replace(/-/g, " ")}</h3>
               </div>
             ))}
           </div>

@@ -13,6 +13,7 @@ export function SortSelect() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const current = searchParams.get("sort") ?? "newest";
+  const currentLabel = sortOptions.find((o) => o.value === current)?.label ?? "Newest";
 
   function handleChange(value: string | null) {
     if (!value) return;
@@ -25,7 +26,7 @@ export function SortSelect() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[180px] bg-surface-container-low border-outline-variant text-on-surface">
-        <SelectValue placeholder="Sort by" />
+        <SelectValue placeholder="Sort by">{currentLabel}</SelectValue>
       </SelectTrigger>
       <SelectContent className="bg-surface-container border-outline-variant">
         {sortOptions.map((option) => (

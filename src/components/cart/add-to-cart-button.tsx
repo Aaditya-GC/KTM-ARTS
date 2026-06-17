@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/use-cart";
 import { GoldButton } from "@/components/shared/gold-button";
@@ -18,7 +19,13 @@ interface AddToCartButtonProps {
 
 export function AddToCartButton({ artwork }: AddToCartButtonProps) {
   const { addItem, isInCart, removeItem } = useCart();
-  const inCart = isInCart(artwork.id);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const inCart = hydrated && isInCart(artwork.id);
 
   function handleToggle() {
     if (inCart) {
