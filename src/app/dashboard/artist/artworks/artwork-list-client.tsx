@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { GoldButton } from "@/components/shared/gold-button";
-import type { Artwork } from "@/lib/db/schema";
+import type { Artwork } from "@/types";
 import { PriceDisplay } from "@/components/shared/price-display";
 
 type Tab = "all" | "available" | "draft";
@@ -94,9 +95,9 @@ export function ArtworkListClient({ artworks }: Props) {
             className="flex items-center gap-4 p-4 bg-surface-container-low border border-outline-variant rounded-sm"
           >
             {/* Thumbnail */}
-            <div className="w-20 h-20 shrink-0 bg-surface-container-higher rounded-sm overflow-hidden">
+            <div className="w-20 h-20 shrink-0 bg-surface-container-higher rounded-sm overflow-hidden relative">
               {artwork.images && artwork.images[0] ? (
-                <img src={artwork.images[0]} alt={artwork.title} className="w-full h-full object-cover" />
+                <Image src={artwork.images[0]} alt={artwork.title} fill className="object-cover" sizes="80px" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-on-surface-variant/30">
                   <span className="material-symbols-outlined text-2xl">image</span>

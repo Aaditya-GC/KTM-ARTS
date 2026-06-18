@@ -22,6 +22,7 @@ export function AddToWishlistButton({
   }, [artworkId, initialInWishlist]);
 
   async function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
     e.stopPropagation();
     if (inWishlist) {
       await removeFromWishlist(artworkId);
@@ -37,8 +38,9 @@ export function AddToWishlistButton({
   return (
     <span
       onClick={handleClick}
-      onPointerDown={(e) => e.stopPropagation()}
-      onMouseDown={(e) => e.stopPropagation()}
+      onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+      onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+      draggable={false}
       className="inline-flex cursor-pointer p-1 hover:text-primary transition-colors"
       aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
       role="button"

@@ -1,11 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { GoldButton } from "@/components/shared/gold-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { Artist } from "@/lib/db/schema";
+import type { Artist } from "@/types";
 
 const SPECIALIZATION_OPTIONS = ["Mandala", "Deities", "Life of Buddha", "Landscape", "Abstract", "Other"];
 
@@ -217,7 +218,9 @@ export function ProfileEditForm({ artist }: Props) {
           {artist.studioImages && artist.studioImages.length > 0 && (
             <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
               {artist.studioImages.map((url, i) => (
-                <img key={url} src={url} alt={`Studio ${i + 1}`} className="w-full aspect-square object-cover rounded-sm" />
+                <div key={url} className="relative aspect-square">
+                  <Image src={url} alt={`Studio ${i + 1}`} fill className="object-cover rounded-sm" sizes="(max-width: 768px) 33vw, 25vw" />
+                </div>
               ))}
             </div>
           )}

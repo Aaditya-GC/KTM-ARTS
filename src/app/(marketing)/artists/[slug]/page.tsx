@@ -1,6 +1,7 @@
 export const revalidate = 300;
 
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { artists, artworks, profiles } from "@/lib/db/schema";
@@ -51,10 +52,21 @@ export default async function ArtistProfilePage({ params }: ArtistProfilePagePro
 
   return (
     <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
-      <div className="aspect-[21/9] bg-surface-container-low mb-16 rounded-sm overflow-hidden">
-        <div className="w-full h-full flex items-center justify-center bg-surface-container-higher">
-          <span className="material-symbols-outlined text-8xl text-on-surface-variant/20">brush</span>
-        </div>
+      <div className="aspect-[21/9] bg-surface-container-low mb-16 rounded-sm overflow-hidden relative">
+        {artist.studioImages?.[0] ? (
+          <Image
+            src={artist.studioImages[0]}
+            alt={profile.fullName}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 80vw"
+            priority
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-surface-container-higher">
+            <span className="material-symbols-outlined text-8xl text-on-surface-variant/20">brush</span>
+          </div>
+        )}
       </div>
 
       <div className="max-w-4xl">

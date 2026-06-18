@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { getCurrentUser } from "@/lib/auth/roles";
 import { redirect } from "next/navigation";
 import Sidebar from "./sidebar";
@@ -5,6 +6,16 @@ import Sidebar from "./sidebar";
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const pathname = (await headers()).get("x-next-pathname") || "";
+
+  if (pathname.startsWith("/dashboard/admin") && user.role !== "admin") {
+    redirect("/dashboard");
+  }
+
+  if (pathname.startsWith("/dashboard/artist") && user.role === "client") {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="min-h-screen flex md:pt-0">

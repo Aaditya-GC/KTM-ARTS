@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { orders, orderItems, artworks, artists, profiles } from "@/lib/db/schema";
@@ -89,9 +90,9 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       <div className="space-y-4">
         {items.map(({ order_items, artworks, profiles }) => (
           <div key={order_items.id} className="flex items-center gap-4 bg-surface-container-low p-4 rounded-sm">
-            <div className="w-16 h-16 bg-surface rounded-sm overflow-hidden shrink-0">
+            <div className="w-16 h-16 bg-surface rounded-sm overflow-hidden shrink-0 relative">
               {artworks.images[0] ? (
-                <img src={artworks.images[0]} alt="" className="w-full h-full object-cover" />
+                <Image src={artworks.images[0]} alt="" fill className="object-cover" sizes="64px" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <span className="material-symbols-outlined text-on-surface-variant/30">image</span>

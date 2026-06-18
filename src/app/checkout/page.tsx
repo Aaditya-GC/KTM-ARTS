@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 import { PriceDisplay } from "@/components/shared/price-display";
+import { checkoutSchema } from "@/lib/validators/checkout";
 
 const inputStyle = "bg-surface-dim border-outline text-on-surface h-11 rounded-sm px-3 placeholder:text-on-surface-variant focus-visible:border-primary focus-visible:ring-0";
+const inputErrorStyle = "bg-surface-dim border-error text-on-surface h-11 rounded-sm px-3 placeholder:text-on-surface-variant focus-visible:border-primary focus-visible:ring-0";
 const labelStyle = "text-[11px] uppercase tracking-widest text-on-surface-variant mb-1.5 block font-medium";
 
 function DiscountCode() {
@@ -36,12 +38,42 @@ export default function CheckoutPage() {
   const { items, totalNpr } = useCart();
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("khalti");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setFieldErrors({});
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const parsed = checkoutSchema.safeParse({
+      email: formData.get("email"),
+      shippingName: formData.get("shippingName"),
+      shippingLastName: formData.get("shippingLastName"),
+      street: formData.get("shippingAddress[street]"),
+      apartment: formData.get("shippingAddress[apartment]") || undefined,
+      city: formData.get("shippingAddress[city]"),
+      state: formData.get("shippingAddress[state]") || undefined,
+      postalCode: formData.get("shippingAddress[postalCode]") || undefined,
+      phone: formData.get("shippingPhone") || undefined,
+      country: formData.get("shippingAddress[country]"),
+      paymentMethod,
+      notes: formData.get("notes") || undefined,
+    });
+
+    if (!parsed.success) {
+      const errors: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const field = issue.path[0] as string;
+        if (!errors[field]) errors[field] = issue.message;
+      }
+      setFieldErrors(errors);
+      return;
+    }
+
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
     formData.set("items", JSON.stringify(items.map((i) => ({
       artworkId: i.artworkId,
       title: i.title,
@@ -96,8 +128,9 @@ export default function CheckoutPage() {
               type="email"
               placeholder="your@email.com"
               required
-              className={inputStyle}
+              className={fieldErrors.email ? inputErrorStyle : inputStyle}
             />
+            {fieldErrors.email && <p className="text-error text-label-sm mt-1">{fieldErrors.email}</p>}
           </div>
 
           {/* Shipping */}
@@ -105,18 +138,21 @@ export default function CheckoutPage() {
             <h2 className="text-[18px] text-on-surface font-medium mb-5">Shipping address</h2>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelStyle}>First name</label>
-                  <Input name="shippingName" placeholder="First name" required className={inputStyle} />
-                </div>
-                <div>
-                  <label className={labelStyle}>Last name</label>
-                  <Input name="shippingLastName" placeholder="Last name" required className={inputStyle} />
-                </div>
+                  <div>
+                    <label className={labelStyle}>First name</label>
+                    <Input name="shippingName" placeholder="First name" required className={fieldErrors.shippingName ? inputErrorStyle : inputStyle} />
+                    {fieldErrors.shippingName && <p className="text-error text-label-sm mt-1">{fieldErrors.shippingName}</p>}
+                  </div>
+                  <div>
+                    <label className={labelStyle}>Last name</label>
+                    <Input name="shippingLastName" placeholder="Last name" required className={fieldErrors.shippingLastName ? inputErrorStyle : inputStyle} />
+                    {fieldErrors.shippingLastName && <p className="text-error text-label-sm mt-1">{fieldErrors.shippingLastName}</p>}
+                  </div>
               </div>
               <div>
                 <label className={labelStyle}>Street address</label>
-                <Input name="shippingAddress[street]" placeholder="Street address" required className={inputStyle} />
+                <Input name="shippingAddress[street]" placeholder="Street address" required className={fieldErrors.street ? inputErrorStyle : inputStyle} />
+                {fieldErrors.street && <p className="text-error text-label-sm mt-1">{fieldErrors.street}</p>}
               </div>
               <div>
                 <label className={labelStyle}>Apartment, suite, etc. (optional)</label>
@@ -125,7 +161,8 @@ export default function CheckoutPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className={labelStyle}>City</label>
-                  <Input name="shippingAddress[city]" placeholder="City" required className={inputStyle} />
+                  <Input name="shippingAddress[city]" placeholder="City" required className={fieldErrors.city ? inputErrorStyle : inputStyle} />
+                  {fieldErrors.city && <p className="text-error text-label-sm mt-1">{fieldErrors.city}</p>}
                 </div>
                 <div>
                   <label className={labelStyle}>State / Province</label>
@@ -146,7 +183,7 @@ export default function CheckoutPage() {
                   name="shippingAddress[country]"
                   defaultValue="NP"
                   required
-                  className={`${inputStyle} w-full appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%238C6A4E%22%3E%3Cpath%20d%3D%22M5.23%207.21a.75.75%200%20011.06.02L10%2011.17l3.71-3.94a.75.75%200%20111.08%201.04l-4.25%204.5a.75.75%200%2001-1.08%200L5.21%208.27a.75.75%200%2001.02-1.06z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px_20px] bg-[right_12px_center] bg-no-repeat pr-10 cursor-pointer`}
+                  className={`${fieldErrors.country ? inputErrorStyle : inputStyle} w-full appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%238C6A4E%22%3E%3Cpath%20d%3D%22M5.23%207.21a.75.75%200%20011.06.02L10%2011.17l3.71-3.94a.75.75%200%20111.08%201.04l-4.25%204.5a.75.75%200%2001-1.08%200L5.21%208.27a.75.75%200%2001.02-1.06z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px_20px] bg-[right_12px_center] bg-no-repeat pr-10 cursor-pointer`}
                 >
                   <option value="NP">Nepal</option>
                   <option value="IN">India</option>
@@ -159,6 +196,7 @@ export default function CheckoutPage() {
                   <option value="AU">Australia</option>
                   <option value="CA">Canada</option>
                 </select>
+                {fieldErrors.country && <p className="text-error text-label-sm mt-1">{fieldErrors.country}</p>}
               </div>
               <div>
                 <label className={labelStyle}>Order notes (optional)</label>

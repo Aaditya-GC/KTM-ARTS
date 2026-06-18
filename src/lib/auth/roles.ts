@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import type { Profile } from "@/lib/db/schema";
+import type { Profile } from "@/types";
 
 function mapProfile(raw: Record<string, unknown>): Profile {
   return {

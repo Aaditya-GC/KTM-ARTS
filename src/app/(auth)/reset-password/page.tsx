@@ -1,16 +1,12 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { signIn } from "@/lib/auth/actions";
+import { useState } from "react";
+import { updatePassword } from "@/lib/auth/reset-password";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
-function LoginForm() {
-  const searchParams = useSearchParams();
-  const resetSuccess = searchParams.get("reset") === "success";
-
+export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +16,16 @@ function LoginForm() {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const result = await signIn(formData);
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    const result = await updatePassword(formData);
 
     if (result?.error) {
       setError(result.error);
@@ -31,42 +36,31 @@ function LoginForm() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-headline-md text-on-surface">Welcome Back</h2>
+        <h2 className="text-headline-md text-on-surface">Set New Password</h2>
         <p className="text-body-md text-on-surface-variant mt-2">
-          Sign in to your account
+          Choose a strong password for your account
         </p>
       </div>
-
-      {resetSuccess && (
-        <div className="bg-primary/10 text-primary text-label-sm px-4 py-3 rounded-sm text-center">
-          Password updated successfully. Please sign in.
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Input
-            name="email"
-            type="email"
-            placeholder="Email"
+            name="password"
+            type="password"
+            placeholder="New password (min 8 characters)"
             className="bg-surface-container-low border-outline-variant text-on-surface"
             required
+            minLength={8}
           />
         </div>
         <div>
           <Input
-            name="password"
+            name="confirmPassword"
             type="password"
-            placeholder="Password"
+            placeholder="Confirm new password"
             className="bg-surface-container-low border-outline-variant text-on-surface"
             required
           />
-        </div>
-
-        <div className="text-right">
-          <Link href="/forgot-password" className="text-label-sm text-accent hover:underline">
-            Forgot password?
-          </Link>
         </div>
 
         {error && (
@@ -80,24 +74,15 @@ function LoginForm() {
           disabled={loading}
           className="w-full gold-leaf-button rounded-full h-12 text-label-sm uppercase font-bold tracking-widest"
         >
-          {loading ? "Signing in..." : "Sign In"}
+          {loading ? "Updating..." : "Update Password"}
         </Button>
       </form>
 
       <p className="text-center text-body-md text-on-surface-variant">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-accent hover:underline">
-          Register
+        <Link href="/login" className="text-accent hover:underline">
+          Back to Sign In
         </Link>
       </p>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
   );
 }

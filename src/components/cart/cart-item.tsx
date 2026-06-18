@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { CartItem } from "@/hooks/use-cart";
 import { PriceDisplay } from "@/components/shared/price-display";
 
@@ -9,9 +10,9 @@ interface CartItemProps {
 export function CartItemRow({ item, onRemove }: CartItemProps) {
   return (
     <div className="flex items-start gap-4 py-4 border-b border-outline-variant/10 last:border-b-0">
-      <div className="w-20 h-20 shrink-0 bg-surface-container rounded-lg overflow-hidden">
+      <div className="w-20 h-20 shrink-0 bg-surface-container rounded-lg overflow-hidden relative">
         {item.image ? (
-          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+          <Image src={item.image} alt={item.title} fill className="object-cover" sizes="80px" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <span className="material-symbols-outlined text-on-surface-variant/30">image</span>

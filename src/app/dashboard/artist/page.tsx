@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { db } from "@/lib/db";
 import { artworks, orderItems, orders, artists } from "@/lib/db/schema";
 import { getCurrentUser } from "@/lib/auth/roles";
@@ -113,9 +114,9 @@ export default async function ArtistDashboardPage() {
                   href={`/dashboard/artist/artworks/${artwork.id}/edit`}
                   className="flex items-center gap-4 p-4 bg-surface-container-low border border-outline-variant rounded-sm hover:bg-surface-container transition-colors"
                 >
-                  <div className="w-14 h-14 shrink-0 bg-surface-container-higher rounded-sm overflow-hidden">
+                  <div className="w-14 h-14 shrink-0 bg-surface-container-higher rounded-sm overflow-hidden relative">
                     {artwork.images && artwork.images[0] ? (
-                      <img src={artwork.images[0]} alt={artwork.title} className="w-full h-full object-cover" />
+                      <Image src={artwork.images[0]} alt={artwork.title} fill className="object-cover" sizes="56px" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-on-surface-variant/30">
                         <span className="material-symbols-outlined text-xl">image</span>

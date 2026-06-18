@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { db } from "@/lib/db";
 import { artworks, artists, profiles } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -38,9 +39,9 @@ export default async function AdminArtworksPage() {
               <tr key={artwork.id} className="border-b border-outline-variant/10">
                 <td className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-surface rounded-sm overflow-hidden shrink-0">
+                    <div className="w-10 h-10 bg-surface rounded-sm overflow-hidden shrink-0 relative">
                       {artwork.images[0] ? (
-                        <img src={artwork.images[0]} alt="" className="w-full h-full object-cover" />
+                        <Image src={artwork.images[0]} alt="" fill className="object-cover" sizes="40px" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <span className="material-symbols-outlined text-sm text-on-surface-variant/30">image</span>

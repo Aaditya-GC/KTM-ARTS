@@ -1,3 +1,13 @@
+/*
+ * Stripe Webhook Handler
+ *
+ * Local testing with Stripe CLI:
+ *   stripe listen --forward-to localhost:3000/api/payments/stripe/webhook
+ *   stripe trigger checkout.session.completed
+ *
+ * Requires STRIPE_WEBHOOK_SECRET env var set to the webhook signing secret.
+ */
+
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { confirmOrder } from "@/lib/order-actions";
@@ -24,9 +34,10 @@ export async function POST(request: NextRequest) {
         await confirmOrder(session.metadata.orderId);
       }
     }
+
+    // Acknowledge all event types — unhandled events are not errors
+    return NextResponse.json({ received: true });
   } catch {
     return NextResponse.json({ error: "Webhook error" }, { status: 400 });
   }
-
-  return NextResponse.json({ received: true });
 }

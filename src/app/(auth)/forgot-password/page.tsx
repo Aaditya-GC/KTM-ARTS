@@ -1,17 +1,14 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { signIn } from "@/lib/auth/actions";
+import { useState } from "react";
+import { requestPasswordReset } from "@/lib/auth/reset-password";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
-function LoginForm() {
-  const searchParams = useSearchParams();
-  const resetSuccess = searchParams.get("reset") === "success";
-
+export default function ForgotPasswordPage() {
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -20,28 +17,42 @@ function LoginForm() {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const result = await signIn(formData);
+    const result = await requestPasswordReset(formData);
 
     if (result?.error) {
       setError(result.error);
       setLoading(false);
+    } else {
+      setSuccess(true);
     }
+  }
+
+  if (success) {
+    return (
+      <div className="text-center space-y-4">
+        <div className="text-primary text-4xl mb-4">✓</div>
+        <h2 className="text-headline-md text-on-surface">Check Your Email</h2>
+        <p className="text-body-md text-on-surface-variant">
+          If an account exists with that email, we have sent a password reset link.
+        </p>
+        <Link
+          href="/login"
+          className="text-accent text-label-sm uppercase tracking-widest hover:underline inline-block mt-4"
+        >
+          Back to Sign In
+        </Link>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-headline-md text-on-surface">Welcome Back</h2>
+        <h2 className="text-headline-md text-on-surface">Forgot Password</h2>
         <p className="text-body-md text-on-surface-variant mt-2">
-          Sign in to your account
+          Enter your email and we will send you a reset link
         </p>
       </div>
-
-      {resetSuccess && (
-        <div className="bg-primary/10 text-primary text-label-sm px-4 py-3 rounded-sm text-center">
-          Password updated successfully. Please sign in.
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -52,21 +63,6 @@ function LoginForm() {
             className="bg-surface-container-low border-outline-variant text-on-surface"
             required
           />
-        </div>
-        <div>
-          <Input
-            name="password"
-            type="password"
-            placeholder="Password"
-            className="bg-surface-container-low border-outline-variant text-on-surface"
-            required
-          />
-        </div>
-
-        <div className="text-right">
-          <Link href="/forgot-password" className="text-label-sm text-accent hover:underline">
-            Forgot password?
-          </Link>
         </div>
 
         {error && (
@@ -80,24 +76,16 @@ function LoginForm() {
           disabled={loading}
           className="w-full gold-leaf-button rounded-full h-12 text-label-sm uppercase font-bold tracking-widest"
         >
-          {loading ? "Signing in..." : "Sign In"}
+          {loading ? "Sending..." : "Send Reset Link"}
         </Button>
       </form>
 
       <p className="text-center text-body-md text-on-surface-variant">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-accent hover:underline">
-          Register
+        Remember your password?{" "}
+        <Link href="/login" className="text-accent hover:underline">
+          Sign In
         </Link>
       </p>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
   );
 }

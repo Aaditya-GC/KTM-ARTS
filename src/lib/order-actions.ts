@@ -1,12 +1,13 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { orders, orderItems, artworks } from "@/lib/db/schema";
+import { orders, orderItems, artworks, profiles, artists } from "@/lib/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { initiateKhaltiPayment } from "@/lib/payments/khalti";
+import { sendOrderConfirmation, sendArtistSaleNotification } from "@/lib/email";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -81,10 +82,12 @@ export async function initiateOrderPayment(formData: FormData, publicCheckout = 
   }
 
   if (method === "esewa") {
+    const esewaUrl = process.env.ESEWA_PAYMENT_URL || "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+    const esewaProductCode = process.env.ESEWA_PRODUCT_CODE || "EPAYTEST";
     redirect(
-      `https://rc-epay.esewa.com.np/api/epay/main/v2/form?` +
+      `${esewaUrl}?` +
       `amount=${order.totalNpr}&tax_amount=0&total_amount=${order.totalNpr}&` +
-      `transaction_uuid=${order.id}-${Date.now()}&product_code=EPAYTEST&` +
+      `transaction_uuid=${order.id}-${Date.now()}&product_code=${esewaProductCode}&` +
       `success_url=${SITE_URL}/api/payments/esewa/verify?order_id=${order.id}&public=${publicCheckout}&` +
       `failure_url=${SITE_URL}${successPath}`
     );
@@ -96,7 +99,10 @@ export async function initiateOrderPayment(formData: FormData, publicCheckout = 
     const session = await createStripeCheckoutSession({
       orderId: order.id,
       publicCheckout,
-      items: stripeItems.map((i) => ({ title: i.title, priceUsd: i.priceUsd ?? Math.round(i.priceNpr / 137), quantity: 1 })),
+      items: stripeItems.map((i) => {
+        const usdRate = Number(process.env.NEXT_PUBLIC_USD_EXCHANGE_RATE) || 134;
+        return { title: i.title, priceUsd: i.priceUsd ?? Math.round(i.priceNpr / usdRate), quantity: 1 };
+      }),
     });
     redirect(session.url!);
   }
@@ -105,15 +111,29 @@ export async function initiateOrderPayment(formData: FormData, publicCheckout = 
 }
 
 export async function confirmOrder(orderId: string) {
+  const [order] = await db
+    .select()
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .limit(1);
+
+  if (!order) return;
+
   // Mark order as paid
   await db.update(orders)
-    .set({ status: "paid" })
+    .set({ status: "paid", updatedAt: new Date() })
     .where(eq(orders.id, orderId));
 
   // Mark artworks as sold
   const items = await db
-    .select({ artworkId: orderItems.artworkId })
+    .select({
+      artworkId: orderItems.artworkId,
+      artworkTitle: artworks.title,
+      priceNpr: orderItems.priceNpr,
+      artistId: artworks.artistId,
+    })
     .from(orderItems)
+    .innerJoin(artworks, eq(orderItems.artworkId, artworks.id))
     .where(eq(orderItems.orderId, orderId));
 
   if (items.length > 0) {
@@ -121,6 +141,26 @@ export async function confirmOrder(orderId: string) {
       .update(artworks)
       .set({ status: "sold" })
       .where(inArray(artworks.id, items.map((i) => i.artworkId)));
+  }
+
+  // Send confirmation email to customer
+  if (order.customerId) {
+    await sendOrderConfirmation(order.customerId, {
+      id: orderId,
+      totalNpr: order.totalNpr,
+      items: items.map((i) => ({ title: i.artworkTitle })),
+    });
+  }
+
+  // Send artist sale notification for each artwork
+  for (const item of items) {
+    if (item.artistId) {
+      await sendArtistSaleNotification(item.artistId, {
+        title: item.artworkTitle,
+        priceNpr: item.priceNpr,
+        buyerName: order.shippingName,
+      });
+    }
   }
 
   revalidatePath(`/dashboard/customer/orders/${orderId}`);

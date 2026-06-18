@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { GoldButton } from "@/components/shared/gold-button";
@@ -7,7 +8,7 @@ import { OutlineButton } from "@/components/shared/outline-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { Artwork, CreationStep, Certificate } from "@/lib/db/schema";
+import type { Artwork, CreationStep, Certificate } from "@/types";
 
 const STYLE_OPTIONS = ["Karma Gadri", "Newari", "Tibetan", "Thangka", "Other"];
 const CATEGORY_OPTIONS = ["Mandala", "Deities", "Life of Buddha", "Landscape", "Abstract", "Thangka", "Other"];
@@ -347,7 +348,7 @@ export function EditArtworkForm({ artwork, categories: initialCategories, steps:
               <div className="grid grid-cols-4 md:grid-cols-5 gap-3">
                 {artwork.images.map((url, i) => (
                   <div key={url} className="relative group">
-                    <img src={url} alt={`Artwork ${i + 1}`} className="w-full aspect-square object-cover rounded-sm" />
+                    <Image src={url} alt={`Artwork ${i + 1}`} fill className="object-cover rounded-sm" sizes="(max-width: 768px) 25vw, 20vw" />
                     {i === 0 && (
                       <span className="absolute top-1 left-1 bg-primary text-on-primary text-label-sm px-2 py-0.5 rounded-full uppercase tracking-widest text-[10px]">
                         Primary

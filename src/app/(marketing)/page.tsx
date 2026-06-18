@@ -98,13 +98,20 @@ export default async function HomePage() {
 
       {/* Section 2 — Platform Overview Cards */}
       <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
-        <div className="grid md:grid-cols-3 gap-gutter">
+        <SectionHeader
+          eyebrow="The Sacred Archive"
+          title="How It Works"
+          description="Three paths to owning a piece of Himalayan heritage"
+          align="center"
+        />
+        <div className="grid md:grid-cols-3 gap-gutter mt-12">
           {[
             {
               icon: "auto_awesome",
               title: "Collect Art",
               desc: "Acquire authenticated Thangka masterpieces with full provenance. Each piece carries a Certificate of Heritage.",
               href: "/marketplace",
+              stat: "7 Artworks",
             },
             {
               icon: "person_pin",
@@ -112,26 +119,33 @@ export default async function HomePage() {
               desc: "Discover artists from generations-old painting traditions. Every brushstroke carries lineage and devotion.",
               href: "/artists",
               offset: true,
+              stat: "4 Masters",
             },
             {
               icon: "edit_note",
               title: "Commission",
               desc: "Work directly with master artists to create a custom Thangka tailored to your spiritual vision.",
               href: "/commissions",
+              stat: "48hr Response",
             },
-          ].map((card, i) => (
+          ].map((card) => (
             <Link
               key={card.title}
               href={card.href}
-              className={`group bg-surface-container-low border border-outline-variant/10 hover:border-primary/40 transition-all duration-500 h-[500px] flex flex-col justify-end p-8 relative overflow-hidden ${card.offset ? "md:-mt-12" : ""}`}
+              className={`group bg-surface-container-low border border-outline-variant/10 hover:border-primary/30 transition-all duration-500 h-[420px] flex flex-col justify-end p-8 relative overflow-hidden ${card.offset ? "md:-mt-10" : ""}`}
             >
-              <span className="material-symbols-outlined absolute top-8 right-8 text-8xl text-on-surface-variant/5 group-hover:scale-110 transition-transform duration-700">
+              <span className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full group-hover:scale-150 transition-transform duration-700" />
+              <span className="material-symbols-outlined absolute top-6 left-6 text-3xl text-primary/20 group-hover:text-primary/40 transition-colors duration-500">
                 {card.icon}
               </span>
+              <span className="absolute top-4 right-5 text-label-sm text-on-surface-variant/25 tracking-widest uppercase group-hover:text-on-surface-variant/40 transition-colors duration-500">
+                {card.stat}
+              </span>
+              <div className="w-8 h-px bg-primary/40 mb-5 group-hover:w-14 transition-all duration-500" />
               <div className="relative z-10">
                 <h3 className="text-headline-md text-on-surface mb-3">{card.title}</h3>
-                <p className="text-body-md text-on-surface-variant mb-6">{card.desc}</p>
-                <span className="inline-flex items-center gap-2 text-label-sm uppercase tracking-widest text-primary group-hover:translate-x-2 transition-transform">
+                <p className="text-body-md text-on-surface-variant mb-6 leading-relaxed">{card.desc}</p>
+                <span className="inline-flex items-center gap-2 text-label-sm uppercase tracking-widest text-primary group-hover:gap-3 transition-all duration-300">
                   Learn More
                   <span className="material-symbols-outlined text-sm">trending_flat</span>
                 </span>

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { commissionRequests } from "@/lib/db/schema";
 import { commissionSchema } from "@/lib/validators/commission";
 import { revalidatePath } from "next/cache";
+import { sendCommissionAcknowledgment } from "@/lib/email";
 
 export async function submitCommission(formData: FormData) {
   const parsed = commissionSchema.safeParse({
@@ -22,6 +23,9 @@ export async function submitCommission(formData: FormData) {
   }
 
   await db.insert(commissionRequests).values(parsed.data);
+
+  await sendCommissionAcknowledgment(parsed.data.email, parsed.data.name);
+
   revalidatePath("/commissions");
   return { success: true };
 }
